@@ -22,12 +22,12 @@ export function StartScreen({ onReady }: StartScreenProps) {
 
   return (
     <div className="start-screen">
+      <h1>Music Studio</h1>
+      <p className="hint">Crea musica con batteria, strumenti ed effetti. Il tuo lavoro viene salvato automaticamente.</p>
       <button onClick={handleStart} disabled={status === 'starting'}>
-        Avvia audio
+        Inizia
       </button>
-      {status === 'error' && (
-        <p role="alert">Impossibile avviare l'audio: controlla che ci sia un'uscita audio e riprova.</p>
-      )}
+      {status === 'error' && <p role="alert">Impossibile avviare l'audio: controlla che ci sia un'uscita audio e riprova.</p>}
     </div>
   )
 }

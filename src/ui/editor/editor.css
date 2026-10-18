@@ -1,0 +1,50 @@
+.bottom-panel {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabs__tab {
+  background: transparent;
+  border-radius: 6px 6px 0 0;
+  color: var(--text-muted);
+}
+
+.tabs__tab[aria-selected='true'] {
+  background: var(--step-off);
+  color: var(--text);
+}
+
+.tabs__context {
+  margin-left: auto;
+  color: var(--text-muted);
+}
+
+.pattern-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.pattern-editor__synth {
+  display: grid;
+  /* minmax(0, 1fr): il piano roll scorre al suo interno invece di allargare la pagina */
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}

@@ -1,11 +1,24 @@
 :root {
   --bg: #16161a;
   --surface: #222228;
+  --border: #3a3a44;
   --text: #ececf1;
   --text-muted: #9a9aa8;
   --accent: #7f5af0;
+  --accent-strong: #a58bff;
+  --danger: #e5484d;
+  --meter: #3fb950;
   --step-off: #34343d;
   --step-off-alt: #2a2a32;
+  --clip-drums: #b2563f;
+  --clip-notes: #3f6fb2;
+  --row-in: #2e2e37;
+  --row-in-black: #292931;
+  --row-out: #1c1c22;
+  --row-root: #3a3550;
+  --row-line: #23232a;
+  --grid-beat: #3a3a46;
+  --grid-bar: #5a5a6a;
   font-family: system-ui, sans-serif;
   color: var(--text);
   background: var(--bg);
@@ -17,7 +30,13 @@ body {
 }
 
 .app {
-  padding: 24px;
+  padding: 16px 20px;
+}
+
+.start-screen {
+  max-width: 480px;
+  margin: 15vh auto 0;
+  text-align: center;
 }
 
 button {
@@ -31,6 +50,10 @@ button {
 }
 
 button:disabled {
-  opacity: 0.5;
-  cursor: wait;
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+label {
+  color: var(--text-muted);
 }

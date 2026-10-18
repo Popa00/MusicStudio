@@ -1,0 +1,80 @@
+.top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.top-bar h1 {
+  margin: 0 8px 0 0;
+  font-size: 1.3rem;
+}
+
+.top-bar__name {
+  width: 180px;
+}
+
+.top-bar__warning {
+  color: var(--danger);
+  font-size: 0.85rem;
+}
+
+.top-bar__help {
+  margin-left: auto;
+}
+
+.project-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0 8px;
+}
+
+.project-menu__error {
+  color: var(--danger);
+  font-size: 0.85rem;
+}
+
+.dialog {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  max-width: 640px;
+  width: calc(100% - 32px);
+}
+
+.dialog::backdrop {
+  background: rgb(0 0 0 / 60%);
+}
+
+.dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dialog__header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.templates {
+  display: grid;
+  gap: 8px;
+}
+
+.templates__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  text-align: left;
+}
+
+.templates__item span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}

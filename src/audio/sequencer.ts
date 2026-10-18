@@ -1,33 +1,35 @@
 import * as Tone from 'tone'
-import { activeVoicesAt } from '../music/drumPattern'
-import { stepAtTicks, stepsPerBar } from '../music/timing'
-import { usePlaybackStore } from '../state/playbackStore'
-import { useProjectStore } from '../state/projectStore'
-import type { DrumVoices } from './drums/types'
+import { eventsAtStep, type PlayTarget } from '../music/schedule'
+import { absoluteStepAtTicks, stepSeconds } from '../music/timing'
+import type { Project } from '../project/types'
+import type { AudioGraph } from './graph/graph'
+import type { Metronome } from './metronome'
 
-const STEP_VELOCITY = 0.9
+/** Da dove il sequencer legge cosa suonare: dallo stato (dal vivo) o da un progetto fisso (export). */
+export interface SequencerSource {
+  project: () => Project
+  target: () => PlayTarget
+  metronome: () => boolean
+  onStep?: (step: number, time: number) => void
+}
 
 /**
- * Ogni sedicesimo legge il pattern attuale dallo stato e fa suonare i colpi attivi.
+ * Ogni sedicesimo calcola gli eventi di quello step e li fa suonare agli strumenti delle tracce.
  * Restituisce una funzione che rimuove la programmazione.
  */
-export function scheduleDrumSequencer(voices: DrumVoices): () => void {
+export function scheduleSequencer(graph: AudioGraph, source: SequencerSource, metronome: Metronome | null): () => void {
   const transport = Tone.getTransport()
 
   const id = transport.scheduleRepeat(
     (time) => {
-      const { drumPattern, timeSignature } = useProjectStore.getState()
-      const ticks = transport.getTicksAtTime(time)
-      const step = stepAtTicks(ticks, transport.PPQ, stepsPerBar(timeSignature))
-
-      for (const voice of activeVoicesAt(drumPattern, step)) {
-        voices[voice].trigger(time, STEP_VELOCITY)
+      const project = source.project()
+      const step = absoluteStepAtTicks(transport.getTicksAtTime(time), transport.PPQ)
+      const seconds = stepSeconds(project.bpm)
+      for (const event of eventsAtStep(project, source.target(), step)) {
+        graph.track(event.trackId)?.instrument.play(event, time, seconds)
       }
-      // La grafica si aggiorna quando il suono esce davvero, non quando viene programmato.
-      // Con la scheda nascosta non si disegna: evita di accumulare aggiornamenti inutili.
-      if (!document.hidden) {
-        Tone.getDraw().schedule(() => usePlaybackStore.getState().setCurrentStep(step), time)
-      }
+      if (metronome && source.metronome()) metronome.tick(step, project.timeSignature, time)
+      source.onStep?.(step, time)
     },
     '16n',
     0,

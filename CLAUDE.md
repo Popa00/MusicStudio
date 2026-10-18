@@ -11,8 +11,17 @@ TypeScript, React, Vite, Tone.js, Zustand (stato), zod (validazione file importa
 - Funzioni ≤ ~50 righe.
 - Raggruppare per funzionalità (es. `src/audio/effects/reverb.ts`, `src/ui/mixer/ChannelStrip.tsx`), non per tipo di file.
 - Il motore audio (`src/audio/`) non dipende dalla UI: la UI legge/scrive lo stato, il motore audio reagisce.
-- Ogni sorgente sonora si collega a `getMasterInput()` (passa dal limiter), mai direttamente a `Tone.Destination`.
-- Ogni file importato (progetto, preset, MIDI) va validato con zod prima dell'uso.
+- Ogni sorgente sonora passa da `master.input` del grafo (`src/audio/graph/master.ts`: limiter + clipper), mai direttamente a `Tone.Destination`.
+- Il motore si ricostruisce dal solo progetto (`createGraph(project)`): lo usa anche l'export WAV offline.
+- Ogni file importato (progetto, preset, MIDI) va validato con zod prima dell'uso (`src/io/projectFile.ts`).
+
+## Struttura
+- `src/project/`: modello dati (schema zod = fonte dei tipi), operazioni pure (`ops/`), modelli di partenza.
+- `src/music/`: logica musicale pura (tempi, scale, note, cosa suonare a ogni step).
+- `src/state/`: store Zustand (progetto con annulla/ripeti, UI, riproduzione) e azioni.
+- `src/audio/`: motore Tone.js (grafo, strumenti, effetti, sequencer, export).
+- `src/io/`: salvataggio automatico, file di progetto, download.
+- `src/ui/`: componenti React raggruppati per area.
 - Il dev server resta su `127.0.0.1`.
 
 ## Subagent

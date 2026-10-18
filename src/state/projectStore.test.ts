@@ -1,58 +1,88 @@
-import { beforeEach, describe, expect, it } from 'vitest'
-import { createBasicBeat } from '../music/basicBeat'
-import { BPM_MAX, BPM_MIN, DEFAULT_BPM } from '../music/timing'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { createEmptyProject } from '../project/factory'
+import { setBpm } from '../project/ops/song'
+import { projectSchema } from '../project/schema/project'
+import { emptyHistory } from './history'
 import { useProjectStore } from './projectStore'
 
 const initial = useProjectStore.getState()
-beforeEach(() => useProjectStore.setState(initial, true))
+const s = () => useProjectStore.getState()
+
+beforeEach(() => {
+  vi.useFakeTimers()
+  vi.setSystemTime(100_000)
+  useProjectStore.setState({ ...initial, project: createEmptyProject(), history: emptyHistory() }, true)
+})
+afterEach(() => vi.useRealTimers())
 
 describe('projectStore', () => {
-  it('parte con BPM predefinito, 4/4 e il ritmo base', () => {
-    const s = useProjectStore.getState()
-    expect(s.bpm).toBe(DEFAULT_BPM)
-    expect(s.timeSignature).toEqual({ beatsPerBar: 4, beatUnit: 4 })
-    expect(s.drumPattern).toEqual(createBasicBeat(16))
+  it('parte con un progetto valido (il modello, in Node non c\'è autosalvataggio)', () => {
+    expect(projectSchema.safeParse(initial.project).success).toBe(true)
+    expect(initial.project.tracks.length).toBeGreaterThan(0)
+    expect(initial.history).toEqual(emptyHistory())
   })
-  it('setBpm imposta il valore', () => {
-    useProjectStore.getState().setBpm(90)
-    expect(useProjectStore.getState().bpm).toBe(90)
+  it('commit applica la modifica e la registra per l\'annulla', () => {
+    const before = s().project
+    s().commit(setBpm(before, 90))
+    expect(s().project.bpm).toBe(90)
+    expect(s().history.past).toEqual([before])
   })
-  it('setBpm limita ai bordi e gestisce NaN/Infinity/decimali', () => {
-    const { setBpm } = useProjectStore.getState()
-    setBpm(1000)
-    expect(useProjectStore.getState().bpm).toBe(BPM_MAX)
-    setBpm(-5)
-    expect(useProjectStore.getState().bpm).toBe(BPM_MIN)
-    setBpm(NaN)
-    expect(useProjectStore.getState().bpm).toBe(DEFAULT_BPM)
-    setBpm(100.6)
-    expect(useProjectStore.getState().bpm).toBe(101)
+  it('commit dello stesso oggetto non registra nulla', () => {
+    s().commit(s().project)
+    expect(s().history.past).toEqual([])
   })
-  it('toggleDrumStep cambia lo step senza mutare il vecchio pattern', () => {
-    const before = useProjectStore.getState().drumPattern
-    const wasOn = before.snare[2]
-    useProjectStore.getState().toggleDrumStep('snare', 2)
-    const after = useProjectStore.getState().drumPattern
-    expect(after.snare[2]).toBe(!wasOn)
-    expect(before.snare[2]).toBe(wasOn)
-    expect(after).not.toBe(before)
+  it('apply parte dal progetto corrente', () => {
+    s().apply((p) => setBpm(p, 100))
+    s().apply((p) => setBpm(p, p.bpm + 1))
+    expect(s().project.bpm).toBe(101)
+    expect(s().history.past).toHaveLength(2)
   })
-  it('toggleDrumStep con step non valido non cambia il pattern', () => {
-    const before = useProjectStore.getState().drumPattern
-    useProjectStore.getState().toggleDrumStep('kick', 99)
-    expect(useProjectStore.getState().drumPattern).toBe(before)
+  it('undo e redo ripristinano gli stati', () => {
+    const start = s().project
+    s().apply((p) => setBpm(p, 90))
+    const at90 = s().project
+    s().undo()
+    expect(s().project).toBe(start)
+    s().redo()
+    expect(s().project).toBe(at90)
   })
-  it('clearDrumPattern svuota tutti i suoni mantenendo 16 step', () => {
-    useProjectStore.getState().clearDrumPattern()
-    const p = useProjectStore.getState().drumPattern
-    for (const row of Object.values(p)) {
-      expect(row).toHaveLength(16)
-      expect(row.some(Boolean)).toBe(false)
+  it('undo e redo senza cronologia non cambiano nulla', () => {
+    const start = s().project
+    s().undo()
+    s().redo()
+    expect(s().project).toBe(start)
+  })
+  it('una nuova modifica dopo un annulla cancella il "ripeti"', () => {
+    s().apply((p) => setBpm(p, 90))
+    s().undo()
+    s().apply((p) => setBpm(p, 80))
+    expect(s().history.future).toEqual([])
+    s().redo()
+    expect(s().project.bpm).toBe(80)
+  })
+  it('mergeKey unisce le modifiche rapide in un solo annulla', () => {
+    const start = s().project
+    for (const bpm of [91, 92, 93]) {
+      s().apply((p) => setBpm(p, bpm), 'bpm')
+      vi.advanceTimersByTime(300)
     }
+    expect(s().history.past).toHaveLength(1)
+    s().undo()
+    expect(s().project).toBe(start)
   })
-  it('clearDrumPattern usa la lunghezza della battuta corrente (3/4)', () => {
-    useProjectStore.setState({ timeSignature: { beatsPerBar: 3, beatUnit: 4 } })
-    useProjectStore.getState().clearDrumPattern()
-    expect(useProjectStore.getState().drumPattern.kick).toHaveLength(12)
+  it('con mergeKey, dopo una pausa lunga si crea un nuovo passo', () => {
+    s().apply((p) => setBpm(p, 91), 'bpm')
+    vi.advanceTimersByTime(1500)
+    s().apply((p) => setBpm(p, 92), 'bpm')
+    expect(s().history.past).toHaveLength(2)
+  })
+  it('replace sostituisce il progetto e azzera la cronologia', () => {
+    s().apply((p) => setBpm(p, 90))
+    const other = createEmptyProject('Altro')
+    s().replace(other)
+    expect(s().project).toBe(other)
+    expect(s().history).toEqual(emptyHistory())
+    s().undo()
+    expect(s().project).toBe(other)
   })
 })

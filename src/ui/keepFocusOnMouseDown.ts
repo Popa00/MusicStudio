@@ -8,3 +8,6 @@ import type { MouseEvent } from 'react'
 export function keepFocusOnMouseDown(e: MouseEvent<HTMLElement>): void {
   e.preventDefault()
 }
+
+/** Props da aggiungere ai pulsanti dell'app. */
+export const noFocus = { onMouseDown: keepFocusOnMouseDown }

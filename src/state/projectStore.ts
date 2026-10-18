@@ -1,27 +1,38 @@
 import { create } from 'zustand'
-import { createBasicBeat } from '../music/basicBeat'
-import { createEmptyPattern, toggleStep, type DrumPattern, type DrumVoiceId } from '../music/drumPattern'
-import { clampBpm, DEFAULT_BPM, stepsPerBar, type TimeSignature } from '../music/timing'
+import { loadAutosave } from '../io/autosave'
+import { electronicBeat } from '../project/templates/electronicBeat'
+import type { Project } from '../project/types'
+import { emptyHistory, record, redo, undo, type History } from './history'
 
-/** Tutto ciò che fa parte del brano e verrà salvato nel file di progetto. */
+/** Il brano (tutto ciò che viene salvato) e la cronologia per annulla/ripeti. */
 interface ProjectState {
-  bpm: number
-  timeSignature: TimeSignature
-  drumPattern: DrumPattern
-  setBpm: (bpm: number) => void
-  toggleDrumStep: (voice: DrumVoiceId, step: number) => void
-  clearDrumPattern: () => void
+  project: Project
+  history: History<Project>
+  /** Applica una modifica. `mergeKey` unisce modifiche rapide in un solo "annulla". */
+  commit: (next: Project, mergeKey?: string) => void
+  apply: (change: (p: Project) => Project, mergeKey?: string) => void
+  undo: () => void
+  redo: () => void
+  /** Sostituisce il progetto (nuovo/apri) e azzera la cronologia. */
+  replace: (project: Project) => void
 }
 
-const INITIAL_TIME_SIGNATURE: TimeSignature = { beatsPerBar: 4, beatUnit: 4 }
-
-export const useProjectStore = create<ProjectState>()((set) => ({
-  bpm: DEFAULT_BPM,
-  timeSignature: INITIAL_TIME_SIGNATURE,
-  drumPattern: createBasicBeat(stepsPerBar(INITIAL_TIME_SIGNATURE)),
-  setBpm: (bpm) => set({ bpm: clampBpm(bpm) }),
-  toggleDrumStep: (voice, step) =>
-    set((s) => ({ drumPattern: toggleStep(s.drumPattern, voice, step) })),
-  clearDrumPattern: () =>
-    set((s) => ({ drumPattern: createEmptyPattern(stepsPerBar(s.timeSignature)) })),
+export const useProjectStore = create<ProjectState>()((set, get) => ({
+  project: loadAutosave() ?? electronicBeat(),
+  history: emptyHistory(),
+  commit: (next, mergeKey) => {
+    const { project, history } = get()
+    if (next === project) return
+    set({ project: next, history: record(history, project, mergeKey, Date.now()) })
+  },
+  apply: (change, mergeKey) => get().commit(change(get().project), mergeKey),
+  undo: () => {
+    const result = undo(get().history, get().project)
+    if (result) set({ project: result.value, history: result.history })
+  },
+  redo: () => {
+    const result = redo(get().history, get().project)
+    if (result) set({ project: result.value, history: result.history })
+  },
+  replace: (project) => set({ project, history: emptyHistory() }),
 }))

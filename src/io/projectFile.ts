@@ -1,0 +1,39 @@
+import { LIMITS } from '../project/limits'
+import { projectSchema } from '../project/schema/project'
+import type { Project } from '../project/types'
+import { normalizeProject } from './normalize'
+
+export const PROJECT_EXTENSION = '.msproj'
+
+export type ParseResult = { ok: true; project: Project } | { ok: false; error: string }
+
+export function serializeProject(project: Project): string {
+  return JSON.stringify(project)
+}
+
+/**
+ * Legge un progetto da testo non fidato (file aperto o salvataggio automatico).
+ * Lo schema zod rifiuta valori fuori range e scarta i campi sconosciuti (es. "__proto__").
+ */
+export function parseProject(text: string): ParseResult {
+  if (text.length > LIMITS.fileChars) return { ok: false, error: 'Il file è troppo grande per essere un progetto.' }
+  let data: unknown
+  try {
+    data = JSON.parse(text)
+  } catch {
+    return { ok: false, error: 'Il file non è un progetto valido (formato non leggibile).' }
+  }
+  const result = projectSchema.safeParse(data)
+  if (!result.success) {
+    const first = result.error.issues[0]
+    const where = first?.path.join('.') || 'file'
+    return { ok: false, error: `Il progetto contiene dati non validi (${where}).` }
+  }
+  return { ok: true, project: normalizeProject(result.data) }
+}
+
+/** Nome file sicuro a partire dal nome del progetto. */
+export function projectFileName(name: string): string {
+  const safe = name.replace(/[^\p{L}\p{N} _-]/gu, '').trim().slice(0, 40)
+  return `${safe || 'progetto'}${PROJECT_EXTENSION}`
+}

@@ -1,5 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { BPM_MAX, BPM_MIN, clampBpm, DEFAULT_BPM, stepAtTicks, stepsPerBar, stepsPerBeat } from './timing'
+import {
+  absoluteStepAtTicks,
+  barSeconds,
+  BPM_MAX,
+  BPM_MIN,
+  clampBpm,
+  DEFAULT_BPM,
+  stepAtTicks,
+  stepSeconds,
+  stepsPerBar,
+  stepsPerBeat,
+} from './timing'
 
 describe('stepsPerBeat / stepsPerBar', () => {
   it('in 4/4 ci sono 4 step per battito e 16 per battuta', () => {
@@ -74,5 +85,43 @@ describe('stepAtTicks (PPQ 192, 48 tick per step)', () => {
   })
   it('scala con un PPQ diverso', () => {
     expect(stepAtTicks(120, 480, 16)).toBe(1)
+  })
+})
+
+describe('stepSeconds / barSeconds', () => {
+  it('a 120 BPM uno step (sedicesimo) dura 0,125 secondi', () => {
+    expect(stepSeconds(120)).toBeCloseTo(0.125)
+    expect(stepSeconds(60)).toBeCloseTo(0.25)
+  })
+  it('a 120 BPM una battuta in 4/4 dura 2 secondi', () => {
+    expect(barSeconds(120, { beatsPerBar: 4, beatUnit: 4 })).toBeCloseTo(2)
+  })
+  it('a 120 BPM una battuta in 6/8 dura 1,5 secondi', () => {
+    expect(barSeconds(120, { beatsPerBar: 6, beatUnit: 8 })).toBeCloseTo(1.5)
+  })
+  it('ai BPM minimi e massimi la battuta in 4/4 dura 6 e 1 secondo', () => {
+    const ts = { beatsPerBar: 4, beatUnit: 4 } as const
+    expect(barSeconds(BPM_MIN, ts)).toBeCloseTo(6)
+    expect(barSeconds(BPM_MAX, ts)).toBeCloseTo(1)
+  })
+})
+
+describe('absoluteStepAtTicks', () => {
+  it('conta gli step dall\'inizio senza tornare a 0 a fine battuta', () => {
+    expect(absoluteStepAtTicks(0, 192)).toBe(0)
+    expect(absoluteStepAtTicks(48 * 16, 192)).toBe(16)
+    expect(absoluteStepAtTicks(48 * 100, 192)).toBe(100)
+  })
+  it('arrotonda al più vicino', () => {
+    expect(absoluteStepAtTicks(23, 192)).toBe(0)
+    expect(absoluteStepAtTicks(24, 192)).toBe(1)
+  })
+  it('scala con il PPQ', () => {
+    expect(absoluteStepAtTicks(120 * 5, 480)).toBe(5)
+  })
+  it('stepAtTicks è absoluteStepAtTicks modulo gli step della battuta', () => {
+    for (const t of [0, 47, 48 * 16, 48 * 33 + 10]) {
+      expect(stepAtTicks(t, 192, 16)).toBe(absoluteStepAtTicks(t, 192) % 16)
+    }
   })
 })

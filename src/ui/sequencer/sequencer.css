@@ -1,23 +1,6 @@
-.sequencer {
-  background: var(--surface);
-  border-radius: 8px;
-  padding: 16px;
-}
-
-.sequencer__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.sequencer__header h2 {
-  margin: 0;
-  font-size: 1.2rem;
-}
-
-.sequencer__help {
-  color: var(--text-muted);
-  margin: 8px 0 16px;
+.sequencer__grid {
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
 .sequencer__row {
@@ -25,6 +8,7 @@
   align-items: center;
   gap: 12px;
   margin-bottom: 6px;
+  width: max-content;
 }
 
 .sequencer__label {

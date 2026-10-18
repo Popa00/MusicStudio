@@ -1,0 +1,47 @@
+.slider {
+  display: grid;
+  grid-template-columns: 110px 1fr 80px;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.slider__label {
+  color: var(--text-muted);
+}
+
+.slider__value {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.button-secondary {
+  background: var(--step-off);
+}
+
+.button-small {
+  padding: 4px 10px;
+  font-size: 0.9rem;
+}
+
+.button-danger {
+  background: var(--danger);
+}
+
+select,
+input[type='text'] {
+  background: var(--step-off);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 0.95rem;
+}
+
+.toggle[aria-pressed='true'] {
+  background: var(--accent);
+}
+
+.toggle[aria-pressed='false'] {
+  background: var(--step-off);
+}

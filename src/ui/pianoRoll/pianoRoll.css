@@ -1,0 +1,105 @@
+.piano-roll__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.piano-roll__header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.scale-selector {
+  display: flex;
+  gap: 12px;
+}
+
+.piano-roll__scroll {
+  display: flex;
+  max-height: 380px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.piano-keys {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  flex-shrink: 0;
+  width: 56px;
+}
+
+.piano-keys__key {
+  box-sizing: border-box;
+  background: #e8e8ee;
+  color: #333;
+  font-size: 0.65rem;
+  line-height: 16px;
+  padding-left: 4px;
+  border-bottom: 1px solid #c8c8d0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.piano-keys__key--black {
+  background: #2b2b33;
+  color: #ccc;
+}
+
+.piano-keys__key:active {
+  background: var(--accent);
+}
+
+.note-grid {
+  position: relative;
+  flex-shrink: 0;
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+
+.note-grid__row {
+  box-sizing: border-box;
+  background: var(--row-in);
+  border-bottom: 1px solid var(--row-line);
+}
+
+.note-grid__row--black {
+  background: var(--row-in-black);
+}
+
+.note-grid__row--out {
+  background: var(--row-out);
+}
+
+.note-grid__row--root {
+  background: var(--row-root);
+}
+
+.note-grid__lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(to right, var(--grid-bar) 0 2px, transparent 2px var(--bar)),
+    repeating-linear-gradient(to right, var(--grid-beat) 0 1px, transparent 1px var(--beat));
+}
+
+.note-grid__note {
+  position: absolute;
+  box-sizing: border-box;
+  background: var(--accent);
+  border: 1px solid var(--accent-strong);
+  border-radius: 3px;
+  cursor: grab;
+}
+
+.note-grid__playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--text);
+  pointer-events: none;
+}

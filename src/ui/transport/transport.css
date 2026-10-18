@@ -1,15 +1,29 @@
 .transport {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 24px;
-  padding: 12px 16px;
+  gap: 16px;
+  padding: 10px 16px;
   background: var(--surface);
   border-radius: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .transport__play {
   min-width: 96px;
+}
+
+.transport__mode {
+  display: flex;
+  gap: 2px;
+}
+
+.transport__mode button:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.transport__mode button:last-child {
+  border-radius: 0 6px 6px 0;
 }
 
 .transport__bpm {

@@ -1,18 +1,17 @@
 import type { DrumVoiceId } from '../../music/drumPattern'
-import { usePlaybackStore } from '../../state/playbackStore'
-import { useProjectStore } from '../../state/projectStore'
-import { keepFocusOnMouseDown } from '../keepFocusOnMouseDown'
+import { toggleStep } from '../../state/actions/patternActions'
+import { noFocus } from '../keepFocusOnMouseDown'
 import { VOICE_LABELS } from './voiceLabels'
 
 interface StepRowProps {
+  patternId: string
   voice: DrumVoiceId
   steps: boolean[]
   stepsPerBeat: number
+  playingStep: number | null
 }
 
-export function StepRow({ voice, steps, stepsPerBeat }: StepRowProps) {
-  const toggle = useProjectStore((s) => s.toggleDrumStep)
-  const currentStep = usePlaybackStore((s) => s.currentStep)
+export function StepRow({ patternId, voice, steps, stepsPerBeat, playingStep }: StepRowProps) {
   const { name, hint } = VOICE_LABELS[voice]
 
   return (
@@ -24,16 +23,16 @@ export function StepRow({ voice, steps, stepsPerBeat }: StepRowProps) {
         {steps.map((on, i) => {
           const classes = ['step']
           if (on) classes.push('step--on')
-          if (i === currentStep) classes.push('step--current')
+          if (i === playingStep) classes.push('step--current')
           if (Math.floor(i / stepsPerBeat) % 2 === 1) classes.push('step--alt-beat')
           return (
             <button
               key={i}
               className={classes.join(' ')}
-              onClick={() => toggle(voice, i)}
-              onMouseDown={keepFocusOnMouseDown}
+              onClick={() => toggleStep(patternId, voice, i)}
               aria-pressed={on}
               aria-label={`${name}, step ${i + 1}`}
+              {...noFocus}
             />
           )
         })}

@@ -11,6 +11,7 @@ export type DrumVoices = Record<DrumVoiceId, DrumVoice>
 
 export interface DrumKit {
   voices: DrumVoices
+  output: Tone.ToneAudioNode
   dispose: () => void
 }
 

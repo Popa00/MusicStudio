@@ -1,0 +1,79 @@
+.mixer__strips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.strip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 104px;
+  flex-shrink: 0;
+  padding: 8px;
+  background: var(--step-off-alt);
+  border-radius: 8px;
+}
+
+.strip--master {
+  margin-left: 12px;
+  border: 1px solid var(--accent);
+}
+
+.strip__name {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.strip__fader {
+  display: flex;
+  gap: 8px;
+  height: 160px;
+}
+
+.strip__volume {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  height: 160px;
+}
+
+.strip__value {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.strip input[type='range']:not(.strip__volume) {
+  width: 90px;
+}
+
+.strip__buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.meter {
+  position: relative;
+  width: 10px;
+  height: 100%;
+  background: var(--step-off);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.meter__fill {
+  position: absolute;
+  inset: 0;
+  background: var(--meter);
+  transform-origin: bottom;
+  transform: scaleY(0);
+}
+
+.meter__fill[data-hot='true'] {
+  background: var(--danger);
+}
