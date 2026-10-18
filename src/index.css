@@ -2,7 +2,10 @@
   --bg: #16161a;
   --surface: #222228;
   --text: #ececf1;
+  --text-muted: #9a9aa8;
   --accent: #7f5af0;
+  --step-off: #34343d;
+  --step-off-alt: #2a2a32;
   font-family: system-ui, sans-serif;
   color: var(--text);
   background: var(--bg);
@@ -25,4 +28,9 @@ button {
   padding: 8px 16px;
   font-size: 1rem;
   cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: wait;
 }

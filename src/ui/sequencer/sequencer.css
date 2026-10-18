@@ -1,0 +1,60 @@
+.sequencer {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.sequencer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sequencer__header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.sequencer__help {
+  color: var(--text-muted);
+  margin: 8px 0 16px;
+}
+
+.sequencer__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.sequencer__label {
+  width: 150px;
+  flex-shrink: 0;
+  cursor: help;
+}
+
+.sequencer__steps {
+  display: flex;
+  gap: 4px;
+}
+
+.step {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 4px;
+  background: var(--step-off);
+}
+
+.step--alt-beat {
+  background: var(--step-off-alt);
+}
+
+.step--on {
+  background: var(--accent);
+}
+
+.step--current {
+  outline: 2px solid var(--text);
+  outline-offset: -2px;
+}
