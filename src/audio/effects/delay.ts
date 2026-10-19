@@ -12,7 +12,8 @@ export function createDelay(settings: SettingsOf<'delay'>): EffectNode {
   })
 
   return {
-    node: delay,
+    input: delay,
+    output: delay,
     ready: Promise.resolve(),
     update: (s) => {
       if (s.type !== 'delay') return

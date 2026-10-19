@@ -13,16 +13,16 @@ export interface Master {
 }
 
 /**
- * Catena del master: compressore leggero → volume → limiter (morbido) → clipper (taglio netto).
+ * Catena del master: volume → limiter (morbido) → clipper (taglio netto).
  * Il limiter di Tone è un compressore senza lookahead: da solo lascia passare i picchi rapidi.
+ * Niente altro compressore: ogni compressore pesa sul processore audio.
  */
 export function createMaster(): Master {
   const ceiling = dbToAmplitude(MASTER_CEILING_DB)
   const clipper = new Tone.WaveShaper((x) => hardClip(x, ceiling)).toDestination()
   const limiter = new Tone.Limiter(MASTER_CEILING_DB).connect(clipper)
   const volume = new Tone.Volume(0).connect(limiter)
-  const compressor = new Tone.Compressor({ threshold: -18, ratio: 3, attack: 0.01, release: 0.2 }).connect(volume)
-  const input = new Tone.Gain(1).connect(compressor)
+  const input = new Tone.Gain(1).connect(volume)
   const meter = new Tone.Meter({ smoothing: 0.8 })
   clipper.connect(meter)
 
@@ -31,7 +31,7 @@ export function createMaster(): Master {
     meter,
     setVolume: (db) => volume.volume.rampTo(db, 0.05),
     dispose: () => {
-      for (const node of [input, compressor, volume, limiter, clipper, meter]) node.dispose()
+      for (const node of [input, volume, limiter, clipper, meter]) node.dispose()
     },
   }
 }

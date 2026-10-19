@@ -5,7 +5,8 @@ export function createDistortion(settings: SettingsOf<'distortion'>): EffectNode
   const distortion = new Tone.Distortion({ distortion: settings.amount, wet: settings.wet, oversample: '2x' })
 
   return {
-    node: distortion,
+    input: distortion,
+    output: distortion,
     ready: Promise.resolve(),
     update: (s) => {
       if (s.type !== 'distortion') return

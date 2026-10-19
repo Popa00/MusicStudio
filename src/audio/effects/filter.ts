@@ -5,7 +5,8 @@ export function createFilter(settings: SettingsOf<'filter'>): EffectNode {
   const filter = new Tone.Filter({ type: settings.mode, frequency: settings.frequency, Q: settings.resonance })
 
   return {
-    node: filter,
+    input: filter,
+    output: filter,
     ready: Promise.resolve(),
     update: (s) => {
       if (s.type !== 'filter') return

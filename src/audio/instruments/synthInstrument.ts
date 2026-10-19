@@ -1,32 +1,35 @@
 import * as Tone from 'tone'
 import type { SynthSettings } from '../../project/types'
-import { toMonoSynthOptions } from './synthOptions'
+import { toFilterOptions, toVoiceOptions } from './synthOptions'
 import type { Instrument } from './types'
 
 /** Volume di base: più note insieme si sommano, serve margine. */
 const SYNTH_LEVEL_DB = -9
-const MAX_VOICES = 16
+/** Note contemporanee per traccia: oltre, la nota più vecchia viene interrotta. */
+const MAX_VOICES = 10
 
 function frequency(pitch: number): number {
   return Tone.Frequency(pitch, 'midi').toFrequency()
 }
 
-function createPoly(settings: SynthSettings, output: Tone.ToneAudioNode): Tone.PolySynth {
-  const poly = new Tone.PolySynth(Tone.MonoSynth, toMonoSynthOptions(settings)).connect(output)
+function createPoly(settings: SynthSettings, output: Tone.InputNode): Tone.PolySynth {
+  const poly = new Tone.PolySynth(Tone.Synth, toVoiceOptions(settings)).connect(output)
   poly.maxPolyphony = MAX_VOICES
   return poly
 }
 
 /**
- * Due sintetizzatori con lo stesso suono: uno per le note del brano, uno per quelle suonate
- * dal vivo (tastiera, piano roll). Se condividessero le voci, il rilascio di una nota del brano
- * potrebbe colpire la voce di una nota suonata dal vivo sulla stessa altezza.
+ * Voci leggere → un filtro unico → volume. Le note suonate dal vivo (tastiera, piano roll) usano
+ * un secondo PolySynth, creato solo al primo uso: se condividessero le voci con il brano, il
+ * rilascio di una nota del brano potrebbe colpire una nota suonata dal vivo sulla stessa altezza.
  */
 export function createSynthInstrument(settings: SynthSettings): Instrument {
   const output = new Tone.Volume(SYNTH_LEVEL_DB)
-  const sequenced = createPoly(settings, output)
-  const live = createPoly(settings, output)
+  const filter = new Tone.Filter(toFilterOptions(settings)).connect(output)
+  const sequenced = createPoly(settings, filter)
+  let live: Tone.PolySynth | null = null
   let current = settings
+  const livePoly = () => (live ??= createPoly(current, filter))
 
   return {
     output,
@@ -36,21 +39,25 @@ export function createSynthInstrument(settings: SynthSettings): Instrument {
       if (!(duration > 0) || !Number.isFinite(duration)) return
       sequenced.triggerAttackRelease(frequency(event.pitch), duration, time, event.velocity)
     },
-    noteOn: (pitch, velocity) => live.triggerAttack(frequency(pitch), Tone.now(), velocity),
-    noteOff: (pitch) => live.triggerRelease(frequency(pitch), Tone.now()),
+    noteOn: (pitch, velocity) => livePoly().triggerAttack(frequency(pitch), Tone.now(), velocity),
+    noteOff: (pitch) => live?.triggerRelease(frequency(pitch), Tone.now()),
     releaseAll: () => {
       sequenced.releaseAll()
-      live.releaseAll()
+      live?.releaseAll()
     },
     update: (track) => {
       if (track.kind !== 'synth' || track.synth === current) return
       current = track.synth
-      sequenced.set(toMonoSynthOptions(current))
-      live.set(toMonoSynthOptions(current))
+      sequenced.set(toVoiceOptions(current))
+      live?.set(toVoiceOptions(current))
+      // Mai filter.set(): con "rolloff" Tone ricrea i filtri a ogni chiamata (click e nodi orfani).
+      filter.frequency.rampTo(current.cutoff, 0.05)
+      filter.Q.rampTo(current.resonance, 0.05)
     },
     dispose: () => {
       sequenced.dispose()
-      live.dispose()
+      live?.dispose()
+      filter.dispose()
       output.dispose()
     },
   }

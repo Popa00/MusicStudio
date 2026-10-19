@@ -5,7 +5,8 @@ export function createEq(settings: SettingsOf<'eq'>): EffectNode {
   const eq = new Tone.EQ3({ low: settings.low, mid: settings.mid, high: settings.high })
 
   return {
-    node: eq,
+    input: eq,
+    output: eq,
     ready: Promise.resolve(),
     update: (s) => {
       if (s.type !== 'eq') return

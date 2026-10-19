@@ -6,7 +6,8 @@ import { useUiStore } from '../state/uiStore'
 import { bindStoresToEngine } from './bindings'
 import { createGraph, type AudioGraph } from './graph/graph'
 import { createMetronome } from './metronome'
-import { guardContextTimeouts, safely } from './safety'
+import { configureAudioContext } from './context'
+import { safely } from './safety'
 import { scheduleSequencer } from './sequencer'
 import { stopTransport } from './transport'
 
@@ -19,6 +20,7 @@ let live: LiveEngine | null = null
 
 /** Il browser permette l'audio solo dopo un gesto dell'utente (click, tasto). */
 export async function startAudio(): Promise<void> {
+  configureAudioContext()
   await Tone.start()
   live ??= initEngine()
 }
@@ -44,17 +46,11 @@ function onStep(step: number, time: number): void {
   Tone.getDraw().schedule(() => safely(() => usePlaybackStore.getState().setCurrentStep(step), 'aggiornamento grafico'), time)
 }
 
-let timeoutsGuarded = false
-
 /** Se qualcosa fallisce a metà, libera quanto già creato: un nuovo tentativo riparte da zero. */
 function initEngine(): LiveEngine {
   const cleanups: Array<() => void> = []
   const teardown = () => {
     for (const cleanup of cleanups.reverse()) cleanup()
-  }
-  if (!timeoutsGuarded) {
-    guardContextTimeouts(Tone.getContext())
-    timeoutsGuarded = true
   }
   try {
     const graph = createGraph(useProjectStore.getState().project)

@@ -2,25 +2,26 @@ import * as Tone from 'tone'
 import type { AudioOutput, DrumVoice } from './types'
 
 /**
- * Charleston (hi-hat): suono metallico acuto.
+ * Charleston (hi-hat): rumore bianco filtrato sugli acuti, come nelle drum machine classiche.
  * `decay` corto = chiuso ("tic"), lungo = aperto ("tsss").
+ * Non usa MetalSynth: i suoi 6 oscillatori restano sempre accesi e pesano sul processore.
  */
 export function createHihat(output: AudioOutput, decay: number): DrumVoice {
-  const filter = new Tone.Filter(7000, 'highpass').connect(output)
-  const metal = new Tone.MetalSynth({
-    envelope: { attack: 0.001, decay, release: 0.01 },
-    harmonicity: 5.1,
-    modulationIndex: 32,
-    resonance: 4000,
-    octaves: 1.5,
-  }).connect(filter)
-  metal.volume.value = -18
+  // Q: Tone.Filter non accetta valori negativi (a differenza del filtro nativo): 0 è il minimo.
+  const highpass = new Tone.Filter({ type: 'highpass', frequency: 7000, Q: 0 }).connect(output)
+  const shine = new Tone.Filter({ type: 'peaking', frequency: 10000, Q: 1, gain: 6 }).connect(highpass)
+  const noise = new Tone.NoiseSynth({
+    noise: { type: 'white' },
+    envelope: { attack: 0.001, decay, sustain: 0, release: 0.01 },
+  }).connect(shine)
+  noise.volume.value = -10
 
   return {
-    trigger: (time, velocity) => metal.triggerAttackRelease(300, decay, time, velocity),
+    trigger: (time, velocity) => noise.triggerAttackRelease(decay, time, velocity),
     dispose: () => {
-      metal.dispose()
-      filter.dispose()
+      noise.dispose()
+      shine.dispose()
+      highpass.dispose()
     },
   }
 }

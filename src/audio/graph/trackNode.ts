@@ -23,8 +23,12 @@ function buildChain(node: TrackNode): void {
   for (const effect of node.effects) effect.dispose()
   node.instrument.output.disconnect()
   node.effects = node.track.effects.filter((e) => e.enabled).map(createEffect)
-  const chain = [node.instrument.output, ...node.effects.map((e) => e.node), node.channel]
-  for (let i = 0; i < chain.length - 1; i++) chain[i].connect(chain[i + 1])
+  let previous: Tone.ToneAudioNode = node.instrument.output
+  for (const effect of node.effects) {
+    previous.connect(effect.input)
+    previous = effect.output
+  }
+  previous.connect(node.channel)
 }
 
 function applyMixer(channel: Tone.Channel, track: Track): void {
