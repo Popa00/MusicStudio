@@ -24,6 +24,11 @@ TypeScript, React, Vite, Tone.js, Zustand (stato), zod (validazione file importa
 - `src/ui/`: componenti React raggruppati per area.
 - Il dev server resta su `127.0.0.1`.
 
+## Verifica nel browser
+- MCP `playwright` (`.mcp.json`): Chrome headless, profilo temporaneo, solo `127.0.0.1:5173` (dev) e `:4173` (preview).
+- Dopo modifiche all'interfaccia: avvia `npm run dev`, apri l'app, controlla con screenshot e console che non ci siano errori.
+- L'audio non si può ascoltare: per verificarlo, esporta il WAV e misura picco e volume.
+
 ## Subagent
 - `music-app-researcher`: ricerca su funzionalità e concetti musicali → scrive in `docs/research/`.
 - `security-code-reviewer`: da eseguire prima di ogni commit significativo e quando si aggiungono dipendenze o import di file.

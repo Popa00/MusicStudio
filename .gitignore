@@ -25,3 +25,6 @@ dist-ssr
 
 .env
 .env.*
+
+# Screenshot e file del browser comandato da Claude (Playwright MCP)
+.playwright-mcp/
