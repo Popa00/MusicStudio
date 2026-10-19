@@ -17,6 +17,10 @@ App locale per creare musica, pensata per chi non è musicista.
 
 ## Avvio
 
+Doppio clic su `avvia.bat` (o sul collegamento "Music Studio.bat" sul Desktop): avvia l'app e apre il browser. Chiudendo la finestra nera l'app si spegne.
+
+Da terminale:
+
 ```bash
 npm ci          # installa esattamente le versioni di package-lock.json
 npm run dev     # http://127.0.0.1:5173
