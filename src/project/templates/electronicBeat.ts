@@ -20,7 +20,7 @@ export function electronicBeat(): Project {
 
   const drums = b.drums('Batteria')
   const groove = b.drumPattern(drums, 'Groove', { kick: [0, 4, 8, 12], clap: [4, 12], hihatClosed: EIGHTHS })
-  const fill = b.drumPattern(drums, 'Groove + aperto', { kick: [0, 4, 8, 10, 12], clap: [4, 12, 14], hihatClosed: [0, 4, 8, 12], hihatOpen: [2, 6, 10, 14] })
+  const fill = b.drumPattern(drums, 'Variante', { kick: [0, 4, 8, 10, 12], clap: [4, 12, 14], hihatClosed: [0, 4, 8, 12], hihatOpen: [2, 6, 10, 14] })
 
   const bass = b.synth('Basso', 'Basso', -4)
   const bassLine = b.notePattern(bass, 'Giro di basso', [...bassBar(45, 0), ...bassBar(41, 1), ...bassBar(48, 2), ...bassBar(43, 3)], 4)

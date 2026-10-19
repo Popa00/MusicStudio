@@ -111,9 +111,11 @@
   top: 4px;
   height: 32px;
   box-sizing: border-box;
-  padding: 6px 8px;
+  padding: 0 5px;
+  line-height: 30px;
+  border: 1px solid rgb(0 0 0 / 35%);
   border-radius: 6px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

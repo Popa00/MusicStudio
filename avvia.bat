@@ -4,6 +4,8 @@ rem Uso: avvia.bat              (apre il browser)
 rem      avvia.bat --no-open    (non apre il browser, utile per prove)
 chcp 65001 >nul
 title Music Studio
+rem Cerca npm, curl e where solo nel PATH, mai nella cartella corrente.
+set "NoDefaultCurrentDirectoryInExePath=1"
 cd /d "%~dp0"
 
 set "URL=http://127.0.0.1:5173/"
@@ -18,15 +20,17 @@ if errorlevel 1 (
 )
 
 rem Se l'app e' gia' in esecuzione, apre solo il browser.
-curl -s -o nul "%URL%" 2>nul
+curl -s --max-time 2 --noproxy "*" -o nul "%URL%" 2>nul
 if not errorlevel 1 (
   echo Music Studio e' gia' avviato.
   if defined OPEN start "" "%URL%"
   exit /b 0
 )
 
-if not exist node_modules (
-  echo Prima installazione delle dipendenze, attendi qualche minuto...
+rem npm scrive node_modules\.package-lock.json solo a installazione completata:
+rem se manca (prima volta o installazione interrotta), si reinstalla.
+if not exist "node_modules\.package-lock.json" (
+  echo Installazione delle dipendenze, attendi qualche minuto...
   call npm ci
   if errorlevel 1 (
     echo Installazione non riuscita.

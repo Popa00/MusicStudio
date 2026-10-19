@@ -1,6 +1,6 @@
 ---
 name: security-code-reviewer
-description: Revisore del codice focalizzato su sicurezza e qualità. Usalo dopo aver scritto o modificato codice (prima di un commit), quando si aggiungono dipendenze, quando si tocca il caricamento di file (progetti, MIDI, audio) o la configurazione di build/dev server. Non modifica il codice: produce un report con i problemi trovati e le correzioni suggerite.
+description: "Revisore del codice focalizzato su sicurezza e qualità. Usalo dopo aver scritto o modificato codice (prima di un commit), quando si aggiungono dipendenze, quando si tocca il caricamento di file (progetti, MIDI, audio) o la configurazione di build/dev server. Non modifica il codice: produce un report con i problemi trovati e le correzioni suggerite."
 tools: Read, Grep, Glob, Bash
 model: opus
 ---

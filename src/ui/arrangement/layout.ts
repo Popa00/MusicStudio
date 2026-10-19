@@ -1,5 +1,5 @@
 /** Larghezza in pixel di una battuta sulla linea del tempo. */
-export const BAR_WIDTH = 56
+export const BAR_WIDTH = 64
 
 /** Battute visibili: il brano più un po' di spazio libero per continuare (minimo 16). */
 export function visibleBars(songBars: number, maxBars: number): number {

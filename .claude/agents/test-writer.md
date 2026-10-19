@@ -1,6 +1,6 @@
 ---
 name: test-writer
-description: Scrive ed esegue test automatici (Vitest) per la logica dell'app musicale - tempi e griglia, note e scale, quantizzazione, stato (store Zustand), validazione e salvataggio/apertura dei progetti, costruzione della catena audio. Usalo dopo aver aggiunto o modificato una funzionalità. Scrive solo file di test: se trova un bug nel codice lo segnala, non lo corregge.
+description: "Scrive ed esegue test automatici (Vitest) per la logica dell'app musicale - tempi e griglia, note e scale, quantizzazione, stato (store Zustand), validazione e salvataggio/apertura dei progetti, costruzione della catena audio. Usalo dopo aver aggiunto o modificato una funzionalità. Scrive solo file di test: se trova un bug nel codice lo segnala, non lo corregge."
 tools: Read, Grep, Glob, Write, Edit, Bash
 model: sonnet
 ---
