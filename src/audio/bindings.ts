@@ -4,6 +4,7 @@ import { useProjectStore } from '../state/projectStore'
 import { currentPlayTarget } from '../state/playTarget'
 import { useUiStore } from '../state/uiStore'
 import type { AudioGraph } from './graph/graph'
+import { resetReported } from './safety'
 import { applyLoop, applyTempo, applyTimeSignature, startTransport, stopTransport } from './transport'
 
 let loopBars = 0
@@ -40,6 +41,7 @@ export function bindStoresToEngine(graph: AudioGraph): () => void {
   const unsubscribePlayback = usePlaybackStore.subscribe((state, prev) => {
     if (state.isPlaying === prev.isPlaying) return
     if (state.isPlaying) {
+      resetReported()
       startTransport()
     } else {
       stopTransport()

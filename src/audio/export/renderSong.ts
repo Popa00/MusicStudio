@@ -4,6 +4,7 @@ import { LIMITS } from '../../project/limits'
 import type { Project } from '../../project/types'
 import { barSeconds } from '../../music/timing'
 import { createGraph, type AudioGraph } from '../graph/graph'
+import { guardContextTimeouts } from '../safety'
 import { scheduleSequencer } from '../sequencer'
 
 /** Frequenza fissa: con schede audio a 96/192 kHz la memoria dell'export esploderebbe. */
@@ -51,6 +52,7 @@ export async function renderSong(project: Project): Promise<AudioBuffer> {
     throw new Error(`Il brano è troppo lungo da esportare (massimo ${LIMITS.exportSeconds / 60} minuti).`)
   }
   const ctx = new Tone.OfflineContext(2, seconds, EXPORT_SAMPLE_RATE)
+  guardContextTimeouts(ctx)
   const { graph, unschedule } = buildOffline(project, ctx)
   try {
     await graph.ready()
