@@ -41,10 +41,12 @@ export function bindStoresToEngine(graph: AudioGraph): () => void {
   const unsubscribePlayback = usePlaybackStore.subscribe((state, prev) => {
     if (state.isPlaying === prev.isPlaying) return
     if (state.isPlaying) {
+      graph.finishSilence()
       resetReported()
       startTransport()
     } else {
       stopTransport()
+      graph.silence()
       state.setCurrentStep(null)
     }
   })
