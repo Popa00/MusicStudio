@@ -27,9 +27,10 @@ TypeScript, React, Vite, Tone.js, Zustand (stato), zod (validazione file importa
 ## Verifica nel browser
 - MCP `playwright` (`.mcp.json`): Chrome headless, profilo temporaneo, solo `127.0.0.1:5173` (dev) e `:4173` (preview).
 - Dopo modifiche all'interfaccia: avvia `npm run dev`, apri l'app, controlla con screenshot e console che non ci siano errori.
-- L'audio non si può ascoltare: per verificarlo, esporta il WAV e misura picco e volume.
+- L'audio non si può ascoltare: si verifica con `npm run audio:check` (vedi `tools/audio-check/README.md`).
 
 ## Subagent
 - `music-app-researcher`: ricerca su funzionalità e concetti musicali → scrive in `docs/research/`.
 - `security-code-reviewer`: da eseguire prima di ogni commit significativo e quando si aggiungono dipendenze o import di file.
 - `test-writer`: scrive ed esegue i test Vitest dopo ogni nuova funzionalità; tocca solo file `*.test.ts(x)` e segnala i bug invece di correggerli.
+- `audio-quality-checker`: dopo ogni modifica che può cambiare il suono (`src/audio/**`, preset, modelli, effetti); misura, guarda gli spettrogrammi, confronta con `tools/audio-check/baseline.json`. Il riferimento si aggiorna solo quando l'utente approva il nuovo suono.

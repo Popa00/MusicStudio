@@ -28,3 +28,11 @@ dist-ssr
 
 # Screenshot e file del browser comandato da Claude (Playwright MCP)
 .playwright-mcp/
+
+# Analisi audio: ambiente Python e risultati
+tools/audio-check/.venv/
+tools/audio-check/out/
+
+# Cache di Python (contengono percorsi del PC)
+__pycache__/
+*.pyc
