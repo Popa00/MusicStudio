@@ -16,7 +16,7 @@ const DAMPING_Q_DB = -3
 /** Ritorno massimo dei pettini (code fino a ~10 s); con lo smorzamento senza picco l'anello resta < 1. */
 const MAX_FEEDBACK = 0.98
 /** Livello complessivo della coda. */
-const TAIL_LEVEL = 0.4
+const TAIL_LEVEL = 0.8
 
 const toSeconds = (samples: number) => samples / 44100
 

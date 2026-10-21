@@ -26,7 +26,7 @@ export const SYNTH_PRESETS: SynthPreset[] = [
   {
     name: 'Lead',
     description: 'Brillante e deciso, per la melodia principale',
-    settings: { preset: 'Lead', waveform: 'square', attack: 0.01, decay: 0.2, sustain: 0.7, release: 0.3, cutoff: 4000, resonance: 3 },
+    settings: { preset: 'Lead', waveform: 'square', attack: 0.01, decay: 0.2, sustain: 0.4, release: 0.3, cutoff: 2500, resonance: 1.5 },
   },
   {
     name: 'Campanella',
@@ -36,7 +36,7 @@ export const SYNTH_PRESETS: SynthPreset[] = [
   {
     name: 'Pluck',
     description: 'Pizzicato e corto, tipico della musica elettronica',
-    settings: { preset: 'Pluck', waveform: 'sawtooth', attack: 0.002, decay: 0.15, sustain: 0, release: 0.2, cutoff: 1500, resonance: 4 },
+    settings: { preset: 'Pluck', waveform: 'sawtooth', attack: 0.002, decay: 0.3, sustain: 0.15, release: 0.2, cutoff: 2500, resonance: 4 },
   },
 ]
 

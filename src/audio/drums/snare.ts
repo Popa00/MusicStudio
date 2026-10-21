@@ -19,7 +19,7 @@ export function createSnare(output: AudioOutput): DrumVoice {
   return {
     trigger: (time, velocity) => {
       noise.triggerAttackRelease('16n', time, velocity)
-      body.triggerAttackRelease('G2', '16n', time, velocity)
+      body.triggerAttackRelease('D3', '16n', time, velocity)
     },
     dispose: () => {
       noise.dispose()

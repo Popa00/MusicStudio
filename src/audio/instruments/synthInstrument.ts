@@ -4,7 +4,23 @@ import { toFilterOptions, toVoiceOptions } from './synthOptions'
 import type { Instrument } from './types'
 
 /** Volume di base: più note insieme si sommano, serve margine. */
-const SYNTH_LEVEL_DB = -9
+const SYNTH_LEVEL_DB = -6
+
+/**
+ * Le forme d'onda hanno energia molto diversa a parità di ampiezza (la quadra è la più "piena"):
+ * senza compensazione, cambiando preset il volume saltava fino a 18 dB.
+ */
+const WAVEFORM_TRIM_DB: Record<SynthSettings['waveform'], number> = {
+  sine: 0,
+  triangle: 0,
+  sawtooth: -3,
+  square: -6,
+}
+
+export function synthLevelDb(settings: SynthSettings): number {
+  return SYNTH_LEVEL_DB + WAVEFORM_TRIM_DB[settings.waveform]
+}
+
 /** Note contemporanee per traccia: oltre, la nota più vecchia viene interrotta. */
 const MAX_VOICES = 10
 
@@ -24,7 +40,7 @@ function createPoly(settings: SynthSettings, output: Tone.InputNode): Tone.PolyS
  * rilascio di una nota del brano potrebbe colpire una nota suonata dal vivo sulla stessa altezza.
  */
 export function createSynthInstrument(settings: SynthSettings): Instrument {
-  const output = new Tone.Volume(SYNTH_LEVEL_DB)
+  const output = new Tone.Volume(synthLevelDb(settings))
   const filter = new Tone.Filter(toFilterOptions(settings)).connect(output)
   const sequenced = createPoly(settings, filter)
   let live: Tone.PolySynth | null = null
@@ -53,6 +69,7 @@ export function createSynthInstrument(settings: SynthSettings): Instrument {
       // Mai filter.set(): con "rolloff" Tone ricrea i filtri a ogni chiamata (click e nodi orfani).
       filter.frequency.rampTo(current.cutoff, 0.05)
       filter.Q.rampTo(current.resonance, 0.05)
+      output.volume.rampTo(synthLevelDb(current), 0.05)
     },
     dispose: () => {
       sequenced.dispose()

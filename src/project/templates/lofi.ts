@@ -12,7 +12,7 @@ export function lofi(): Project {
   const drums = b.drums('Batteria')
   const beat = b.drumPattern(drums, 'Beat lento', { kick: [0, 7, 10], snare: [4, 12], hihatClosed: [0, 2, 4, 6, 8, 10, 12, 14] })
 
-  const keys = b.synth('Piano', 'Piano elettrico', -6)
+  const keys = b.synth('Piano', 'Piano elettrico', -5)
   const progression = b.notePattern(keys, 'Accordi', [
     ...chord([60, 64, 67, 71], 0),
     ...chord([57, 60, 64, 67], 1),
@@ -20,7 +20,7 @@ export function lofi(): Project {
     ...chord([55, 59, 62, 65], 3),
   ], 4)
 
-  const bass = b.synth('Basso', 'Basso', -6)
+  const bass = b.synth('Basso', 'Basso', -3)
   const bassLine = b.notePattern(bass, 'Basso', [[36, 0, 6], [36, 10, 4], [33, 16, 6], [33, 26, 4], [38, 32, 6], [38, 42, 4], [31, 48, 6], [31, 58, 4]], 4)
 
   b.place(beat, 0, 1, 2, 3, 4, 5, 6, 7)

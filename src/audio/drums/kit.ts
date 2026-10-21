@@ -8,7 +8,7 @@ import { createSnare } from './snare'
 import type { DrumKit, DrumVoices } from './types'
 
 /** Volume complessivo della batteria: lascia margine prima del limiter del master. */
-const KIT_LEVEL_DB = -6
+const KIT_LEVEL_DB = -3
 
 /** Batteria sintetizzata: nessun campione audio, tutti i suoni sono generati. */
 export function createDrumKit(): DrumKit {

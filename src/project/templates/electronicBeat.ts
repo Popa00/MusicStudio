@@ -28,7 +28,7 @@ export function electronicBeat(): Project {
   const pad = b.synth('Accordi', 'Pad atmosferico', -10)
   const chords = b.notePattern(pad, 'La- Fa Do Sol', [...chord([57, 60, 64], 0), ...chord([53, 57, 60], 1), ...chord([55, 60, 64], 2), ...chord([55, 59, 62], 3)], 4)
 
-  const lead = b.synth('Melodia', 'Pluck', -6)
+  const lead = b.synth('Melodia', 'Pluck', 0)
   const melody = b.notePattern(lead, 'Melodia', [
     [69, 0, 2], [72, 2, 2], [76, 4, 4], [74, 8, 2], [72, 10, 2], [69, 12, 4],
     [72, 16, 2], [74, 18, 2], [76, 20, 4], [79, 24, 4], [76, 28, 4],
