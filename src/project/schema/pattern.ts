@@ -2,7 +2,8 @@ import { z } from 'zod'
 import { LIMITS, MAX_PATTERN_STEPS } from '../limits'
 
 const id = z.string().min(1).max(64)
-const steps = z.array(z.boolean()).max(MAX_PATTERN_STEPS)
+/** 0 = casella spenta, altrimenti l'intensità del colpo. */
+const steps = z.array(z.number().min(0).max(1)).max(MAX_PATTERN_STEPS)
 
 /** Una nota nel piano roll. Posizione e durata sono in step (sedicesimi). */
 export const noteSchema = z.object({

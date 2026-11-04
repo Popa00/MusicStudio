@@ -1,8 +1,15 @@
 import type { DrumVoiceId } from '../../music/drumPattern'
+import { DEFAULT_DRUM_VELOCITY, DEFAULT_NOTE_VELOCITY } from '../../music/velocity'
 import { createEmptyProject, createPattern, createTrack } from '../factory'
 import { newId } from '../ids'
 import { findPreset } from '../synthPresets'
 import type { DrumPatternData, Note, Pattern, Project, Track } from '../types'
+
+/** Uno step acceso, oppure [step, intensità]. */
+export type DrumHitSpec = number | [number, number]
+
+/** [pitch, start, duration] con intensità facoltativa. */
+export type NoteSpec = [number, number, number] | [number, number, number, number]
 
 /** Piccolo costruttore per scrivere i progetti di partenza in modo leggibile. */
 export class TemplateBuilder {
@@ -22,19 +29,25 @@ export class TemplateBuilder {
     return this.addTrack({ ...track, mixer: { ...track.mixer, volumeDb } })
   }
 
-  /** `hits` mappa ogni suono agli step accesi, es. { kick: [0, 4, 8, 12] }. */
-  drumPattern(track: Track, name: string, hits: Partial<Record<DrumVoiceId, number[]>>, bars = 1): Pattern {
+  /**
+   * `hits` mappa ogni suono agli step accesi, es. { kick: [0, 4, 8, 12] }.
+   * Un colpo può essere anche [step, intensità], es. [2, 0.5] per un colpo più leggero.
+   */
+  drumPattern(track: Track, name: string, hits: Partial<Record<DrumVoiceId, DrumHitSpec[]>>, bars = 1): Pattern {
     const pattern = createPattern(track, name, this.project.timeSignature, bars) as DrumPatternData
-    for (const [voice, steps] of Object.entries(hits) as [DrumVoiceId, number[]][]) {
-      for (const s of steps) pattern.steps[voice][s] = true
+    for (const [voice, specs] of Object.entries(hits) as [DrumVoiceId, DrumHitSpec[]][]) {
+      for (const spec of specs) {
+        const [step, velocity] = typeof spec === 'number' ? [spec, DEFAULT_DRUM_VELOCITY] : spec
+        pattern.steps[voice][step] = velocity
+      }
     }
     return this.addPattern(pattern)
   }
 
-  /** `notes`: [pitch, start, duration]. */
-  notePattern(track: Track, name: string, notes: [number, number, number][], bars = 1): Pattern {
+  /** `notes`: [pitch, start, duration] oppure [pitch, start, duration, intensità]. */
+  notePattern(track: Track, name: string, notes: NoteSpec[], bars = 1): Pattern {
     const base = createPattern(track, name, this.project.timeSignature, bars)
-    const list: Note[] = notes.map(([pitch, start, duration]) => ({ id: newId(), pitch, start, duration, velocity: 0.8 }))
+    const list: Note[] = notes.map(([pitch, start, duration, velocity = DEFAULT_NOTE_VELOCITY]) => ({ id: newId(), pitch, start, duration, velocity }))
     return this.addPattern({ ...base, kind: 'notes', notes: list } as Pattern)
   }
 

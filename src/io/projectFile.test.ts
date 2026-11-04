@@ -43,8 +43,30 @@ describe('parseProject con file non validi', () => {
     expect(parseProject(padded).ok).toBe(true)
   })
   it('rifiuta una versione di formato sconosciuta', () => {
-    const data = { ...createEmptyProject(), formatVersion: 2 }
-    expectError(parseProject(JSON.stringify(data)), 'formatVersion')
+    for (const formatVersion of [0, -1, '2', null]) {
+      const data = { ...createEmptyProject(), formatVersion }
+      expectError(parseProject(JSON.stringify(data)), 'formatVersion')
+    }
+    const { formatVersion: _omit, ...senza } = createEmptyProject()
+    expectError(parseProject(JSON.stringify(senza)), 'dati non validi')
+  })
+  it('per una versione più recente dell app dà un messaggio dedicato', () => {
+    for (const formatVersion of [3, 99]) {
+      const data = { ...createEmptyProject(), formatVersion }
+      expectError(parseProject(JSON.stringify(data)), 'versione più recente')
+    }
+  })
+  it('un file v2 con una nota a intensità 0 viene aperto con la nota a 0,1', () => {
+    const base = electronicBeat()
+    const patterns = base.patterns.map((p, i) =>
+      p.kind === 'notes' && i === base.patterns.findIndex((q) => q.kind === 'notes')
+        ? { ...p, notes: p.notes.map((n, j) => (j === 0 ? { ...n, velocity: 0 } : n)) }
+        : p)
+    const result = parseProject(JSON.stringify({ ...base, patterns }))
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    const first = result.project.patterns.find((p) => p.kind === 'notes')
+    expect(first?.kind === 'notes' && first.notes[0].velocity).toBe(0.1)
   })
   it('indica nel messaggio dove si trova il dato sbagliato', () => {
     const project = electronicBeat()

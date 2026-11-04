@@ -1,5 +1,8 @@
 import type { Project } from '../types'
-import { TemplateBuilder } from './build'
+import { TemplateBuilder, type DrumHitSpec } from './build'
+
+/** Charleston morbido: i colpi tra un battito e l'altro sono appena accennati. */
+const SOFT_EIGHTHS: DrumHitSpec[] = [0, [2, 0.45], 4, [6, 0.45], 8, [10, 0.45], 12, [14, 0.45]]
 
 function chord(pitches: number[], bar: number): [number, number, number][] {
   return pitches.map((p) => [p, bar * 16, 14])
@@ -10,7 +13,7 @@ export function lofi(): Project {
   const b = new TemplateBuilder('Lo-fi tranquillo', 80)
 
   const drums = b.drums('Batteria')
-  const beat = b.drumPattern(drums, 'Beat lento', { kick: [0, 7, 10], snare: [4, 12], hihatClosed: [0, 2, 4, 6, 8, 10, 12, 14] })
+  const beat = b.drumPattern(drums, 'Beat lento', { kick: [0, [7, 0.6], 10], snare: [4, 12], hihatClosed: SOFT_EIGHTHS })
 
   const keys = b.synth('Piano', 'Piano elettrico', -5)
   const progression = b.notePattern(keys, 'Accordi', [

@@ -1,0 +1,28 @@
+.velocity-lane {
+  position: relative;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  background:
+    linear-gradient(to top, transparent calc(50% - 1px), var(--row-line) calc(50% - 1px) 50%, transparent 50%),
+    var(--row-out);
+  border-top: 1px solid var(--border);
+  cursor: ns-resize;
+  touch-action: none;
+  user-select: none;
+}
+
+.velocity-lane__bar {
+  position: absolute;
+  bottom: 0;
+  box-sizing: border-box;
+  background: var(--accent);
+  border-top: 2px solid var(--accent-strong);
+  border-radius: 2px 2px 0 0;
+}
+
+.velocity-label {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  cursor: help;
+}

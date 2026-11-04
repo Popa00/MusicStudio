@@ -3,6 +3,7 @@ import { findPattern } from '../../project/ops/helpers'
 import type { NotePatternData } from '../../project/types'
 import { useProjectStore } from '../../state/projectStore'
 import { NoteGrid } from './NoteGrid'
+import { NoteVelocityLane } from './NoteVelocityLane'
 import { PianoKeys } from './PianoKeys'
 import { ScaleSelector } from './ScaleSelector'
 import { scrollTopFor } from './geometry'
@@ -30,11 +31,15 @@ export function PianoRoll({ trackId, pattern }: { trackId: string; pattern: Note
       </div>
       <p className="hint">
         Clicca per aggiungere una nota (trascina per allungarla) · trascina una nota per spostarla · bordo destro per
-        allungarla · clic destro per cancellarla · suona con i tasti A-K (Z/X cambiano ottava).
+        allungarla · clic destro per cancellarla · nella striscia in basso trascina le barrette per rendere una nota più forte o più
+        leggera · suona con i tasti A-K (Z/X cambiano ottava).
       </p>
       <div className="piano-roll__scroll" ref={scrollRef}>
-        <PianoKeys trackId={trackId} />
-        <NoteGrid trackId={trackId} pattern={pattern} />
+        <div className="piano-roll__body">
+          <PianoKeys trackId={trackId} />
+          <NoteGrid trackId={trackId} pattern={pattern} />
+        </div>
+        <NoteVelocityLane pattern={pattern} />
       </div>
     </div>
   )

@@ -35,7 +35,23 @@
 }
 
 .step--on {
-  background: var(--accent);
+  /* --strength viene dall'intensità del colpo: più leggero = colore più tenue. */
+  background: color-mix(in srgb, var(--accent) var(--strength, 100%), var(--step-off));
+}
+
+.sequencer__velocity {
+  margin-top: 6px;
+}
+
+.sequencer__velocity .sequencer__label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sequencer__velocity select {
+  max-width: 100%;
+  font-size: 0.8rem;
 }
 
 .step--current {

@@ -1,3 +1,4 @@
+import { clampVelocity } from '../music/velocity'
 import { LIMITS } from '../project/limits'
 import { resizePattern } from '../project/ops/patternLength'
 import type { Clip, Pattern, Project, Track } from '../project/types'
@@ -13,7 +14,10 @@ function kindMatches(track: Track, pattern: Pattern): boolean {
 
 function normalizePattern(pattern: Pattern, project: Project): Pattern {
   const resized = resizePattern(pattern, pattern.lengthBars, project.timeSignature)
-  return resized.kind === 'notes' ? { ...resized, notes: uniqueById(resized.notes) } : resized
+  if (resized.kind !== 'notes') return resized
+  // Intensità già nella forma che l'app usa (min. 10%): una nota a 0 non resta muta fino alla prima modifica.
+  const notes = uniqueById(resized.notes).map((n) => ({ ...n, velocity: clampVelocity(n.velocity) }))
+  return { ...resized, notes }
 }
 
 /** Tiene solo i blocchi dentro il brano e non sovrapposti ad altri della stessa traccia. */

@@ -1,6 +1,7 @@
 import { isBlackKey } from '../../music/notes'
 import { isInScale } from '../../music/scales'
 import { stepsPerBar, stepsPerBeat } from '../../music/timing'
+import { formatVelocity } from '../../music/velocity'
 import { patternSteps } from '../../project/ops/patternLength'
 import type { NotePatternData } from '../../project/types'
 import { useProjectStore } from '../../state/projectStore'
@@ -41,7 +42,9 @@ export function NoteGrid({ trackId, pattern }: { trackId: string; pattern: NoteP
           key={note.id}
           data-note-id={note.id}
           className="note-grid__note"
-          style={{ left: note.start * STEP_WIDTH, top: pitchToY(note.pitch), width: note.duration * STEP_WIDTH - 1, height: ROW_HEIGHT - 1 }}
+          title={`Intensità ${formatVelocity(note.velocity)}`}
+          // Le note più leggere sono più chiare: si vedono subito gli accenti.
+          style={{ left: note.start * STEP_WIDTH, top: pitchToY(note.pitch), width: note.duration * STEP_WIDTH - 1, height: ROW_HEIGHT - 1, opacity: 0.35 + 0.65 * note.velocity }}
         />
       ))}
       {playingStep !== null && <div className="note-grid__playhead" style={{ left: playingStep * STEP_WIDTH }} />}

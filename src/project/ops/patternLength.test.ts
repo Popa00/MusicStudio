@@ -14,8 +14,8 @@ function must<T>(value: T | null | undefined): T {
   return value
 }
 
-function drumPattern(lengthBars: number, kick: boolean[]): Pattern {
-  const empty = Array<boolean>(kick.length).fill(false)
+function drumPattern(lengthBars: number, kick: number[]): Pattern {
+  const empty = Array<number>(kick.length).fill(0)
   return { id: 'p', trackId: 't', name: 'P', lengthBars, kind: 'drums', steps: { kick, snare: empty, clap: empty, hihatClosed: empty, hihatOpen: empty } }
 }
 
@@ -33,21 +33,21 @@ describe('patternSteps', () => {
 
 describe('resizePattern', () => {
   it('allungando un pattern di batteria mantiene i colpi e aggiunge caselle vuote', () => {
-    const kick = Array<boolean>(16).fill(false)
-    kick[0] = kick[15] = true
+    const kick = Array<number>(16).fill(0)
+    kick[0] = kick[15] = 0.6
     const r = resizePattern(drumPattern(1, kick), 2, TS)
     if (r.kind !== 'drums') throw new Error('atteso pattern di batteria')
     expect(r.lengthBars).toBe(2)
     expect(r.steps.kick).toHaveLength(32)
     expect(r.steps.kick.filter(Boolean)).toHaveLength(2)
-    expect(r.steps.kick[15]).toBe(true)
+    expect(r.steps.kick[15]).toBe(0.6)
     expect(r.steps.snare).toHaveLength(32)
   })
   it('accorciando taglia i colpi oltre la fine', () => {
-    const kick = Array<boolean>(32).fill(false)
-    kick[20] = true
+    const kick = Array<number>(32).fill(0)
+    kick[20] = 0.9
     const r = resizePattern(drumPattern(2, kick), 1, TS)
-    expect(r.kind === 'drums' && r.steps.kick).toEqual(Array(16).fill(false))
+    expect(r.kind === 'drums' && r.steps.kick).toEqual(Array(16).fill(0))
   })
   it('accorciando toglie le note che iniziano dopo la fine e accorcia quelle a cavallo', () => {
     const r = resizePattern(notePattern(2, [[0, 4], [14, 6], [20, 2]]), 1, TS)
@@ -61,7 +61,7 @@ describe('resizePattern', () => {
     expect(resizePattern(p, NaN, TS).lengthBars).toBe(1)
   })
   it('non modifica il pattern originale', () => {
-    const kick = Array<boolean>(16).fill(true)
+    const kick = Array<number>(16).fill(0.9)
     const p = drumPattern(1, kick)
     resizePattern(p, 2, TS)
     expect(p.kind === 'drums' && p.steps.kick).toHaveLength(16)
@@ -87,5 +87,16 @@ describe('setPatternLength', () => {
     const b = addClip(a.project, trackId, id, 1)
     const p = setPatternLength(b.project, id, 2)
     for (const c of p.clips) expect(overlaps(p, trackId, id, c.startBar, c.id)).toBe(false)
+  })
+})
+
+describe('resizePattern: intensità dei colpi', () => {
+  it('porta le caselle accese nell\'intervallo valido e lascia spente quelle a 0', () => {
+    const kick = Array<number>(16).fill(0)
+    kick[0] = 0.01
+    kick[1] = 5
+    kick[2] = 0.4
+    const r = resizePattern(drumPattern(1, kick), 1, TS)
+    expect(r.kind === 'drums' && r.steps.kick.slice(0, 4)).toEqual([0.1, 1, 0.4, 0])
   })
 })

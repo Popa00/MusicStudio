@@ -1,4 +1,5 @@
 import type { DrumVoiceId } from '../../../src/music/drumPattern'
+import { DEFAULT_DRUM_VELOCITY, DEFAULT_NOTE_VELOCITY } from '../../../src/music/velocity'
 import { createEffectSettings } from '../../../src/project/effectDefaults'
 import { SYNTH_PRESETS } from '../../../src/project/synthPresets'
 import { TEMPLATES } from '../../../src/project/templates'
@@ -33,18 +34,18 @@ const DRUMS: { voice: DrumVoiceId; label: string; expect: Expectation }[] = [
   { voice: 'hihatOpen', label: 'Charleston aperto', expect: { centroidMinHz: 5000 } },
 ]
 
-function drumHit(voice: DrumVoiceId, effects: EffectSettings[] = []): Project {
+function drumHit(voice: DrumVoiceId, effects: EffectSettings[] = [], velocity = DEFAULT_DRUM_VELOCITY): Project {
   const b = new TemplateBuilder('prova', 120)
   const track = b.drums('Batteria')
   b.project = { ...b.project, tracks: b.project.tracks.map((t) => ({ ...t, effects })) }
-  b.place(b.drumPattern(track, 'colpo', { [voice]: [0] }), 0)
+  b.place(b.drumPattern(track, 'colpo', { [voice]: [[0, velocity]] }), 0)
   return b.project
 }
 
-function synthNote(presetName: string, pitches: number[]): Project {
+function synthNote(presetName: string, pitches: number[], velocity = DEFAULT_NOTE_VELOCITY): Project {
   const b = new TemplateBuilder('prova', 120)
   const track = b.synth('Strumento', presetName)
-  b.place(b.notePattern(track, 'nota', pitches.map((p) => [p, 0, 8])), 0)
+  b.place(b.notePattern(track, 'nota', pitches.map((p) => [p, 0, 8, velocity])), 0)
   return b.project
 }
 
@@ -69,6 +70,16 @@ export const SCENARIOS: Scenario[] = [
     expect: { singleHit: true, ...(preset.name === 'Basso' ? { centroidMaxHz: 1200 } : {}) },
     build: () => synthNote(preset.name, preset.name === 'Basso' ? [36] : [60, 64, 67]),
   })),
+  // Intensità: stessi suoni suonati piano (30%). Rispetto a batteria-kick (90%) e strumento-pluck (80%)
+  // il picco deve scendere di circa 9,5 dB e 8,5 dB, e il suono restare pulito.
+  {
+    name: 'batteria-kick-piano', category: 'batteria', description: 'Cassa, un colpo leggero (intensità 30%)',
+    expect: { singleHit: true, centroidMaxHz: 400 }, build: () => drumHit('kick', [], 0.3),
+  },
+  {
+    name: 'strumento-pluck-piano', category: 'strumenti', description: 'Preset "Pluck", accordo di Do suonato piano (intensità 30%)',
+    expect: { singleHit: true }, build: () => synthNote('Pluck', [60, 64, 67], 0.3),
+  },
   ...[1, 3, 8].map((decay) => ({
     name: `effetto-riverbero-${decay}s`, category: 'effetti' as const, description: `Battimani con riverbero di ${decay} s`,
     expect: { singleHit: true }, build: () => drumHit('clap', [withEffect('reverb', { decay, wet: 0.5 })]),

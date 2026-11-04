@@ -15,6 +15,13 @@ export function changeNote(patternId: string, noteId: string, changes: Partial<N
   store().commit(updateNote(store().project, patternId, noteId, changes), dragId)
 }
 
+/** Stessa intensità per più note (es. un accordo); `dragId` come sopra. */
+export function changeNotesVelocity(patternId: string, noteIds: string[], velocity: number, dragId?: string): void {
+  let next = store().project
+  for (const id of noteIds) next = updateNote(next, patternId, id, { velocity })
+  store().commit(next, dragId)
+}
+
 export function deleteNote(patternId: string, noteId: string): void {
   store().commit(removeNote(store().project, patternId, noteId))
 }

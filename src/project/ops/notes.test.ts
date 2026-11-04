@@ -41,9 +41,11 @@ describe('clampNote', () => {
     expect(clampNote(note({ pitch: -5 }), 16).pitch).toBe(0)
     expect(clampNote(note({ pitch: 60.6, start: 2.4 }), 16)).toMatchObject({ pitch: 61, start: 2 })
   })
-  it('limita l\'intensità tra 0 e 1, NaN diventa 0', () => {
+  it('limita l\'intensità tra 0,1 e 1, NaN diventa 0,8', () => {
     expect(clampNote(note({ velocity: 2 }), 16).velocity).toBe(1)
-    expect(clampNote(note({ velocity: NaN }), 16).velocity).toBe(0)
+    expect(clampNote(note({ velocity: 0 }), 16).velocity).toBe(0.1)
+    expect(clampNote(note({ velocity: -1 }), 16).velocity).toBe(0.1)
+    expect(clampNote(note({ velocity: NaN }), 16).velocity).toBe(0.8)
   })
 })
 

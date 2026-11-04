@@ -2,7 +2,7 @@ import { songLengthBars } from '../project/ops/clips'
 import { findPattern } from '../project/ops/helpers'
 import { patternSteps } from '../project/ops/patternLength'
 import type { Pattern, Project } from '../project/types'
-import { activeVoicesAt, type DrumVoiceId } from './drumPattern'
+import { hitsAt, type DrumVoiceId } from './drumPattern'
 import { stepsPerBar } from './timing'
 
 export type TriggerEvent =
@@ -12,13 +12,11 @@ export type TriggerEvent =
 /** Cosa suonare: tutto il brano, oppure solo un pattern in loop. */
 export type PlayTarget = { mode: 'song' } | { mode: 'pattern'; patternId: string }
 
-const DRUM_VELOCITY = 0.9
-
 /** Eventi che partono in un certo step di un pattern. */
 export function patternEventsAt(pattern: Pattern, step: number): TriggerEvent[] {
   const trackId = pattern.trackId
   if (pattern.kind === 'drums') {
-    return activeVoicesAt(pattern.steps, step).map((voice) => ({ kind: 'drum', trackId, voice, velocity: DRUM_VELOCITY }))
+    return hitsAt(pattern.steps, step).map(({ voice, velocity }) => ({ kind: 'drum', trackId, voice, velocity }))
   }
   return pattern.notes
     .filter((n) => n.start === step)

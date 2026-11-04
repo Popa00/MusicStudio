@@ -15,11 +15,36 @@
 }
 
 .piano-roll__scroll {
-  display: flex;
-  max-height: 380px;
+  max-height: 436px;
   overflow: auto;
   border: 1px solid var(--border);
   border-radius: 6px;
+}
+
+.piano-roll__body {
+  display: flex;
+  width: max-content;
+}
+
+/* Resta visibile in fondo mentre si scorre tra le note. */
+.piano-roll__velocity {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  width: max-content;
+  background: var(--bg);
+}
+
+.piano-roll__velocity-label {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 56px;
+  padding: 4px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
 }
 
 .piano-keys {

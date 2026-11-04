@@ -58,7 +58,8 @@ BALANCE_MAX_DB, DRUM_SPREAD_DB, PRESET_SPREAD_DB = 6.0, 12.0, 8.0
 
 def spread(results, category, key, max_db, context):
     """Segnala i suoni di una categoria molto più forti o più deboli della mediana."""
-    items = [r for r in results if r["category"] == category and r["metrics"][key] is not None]
+    # Gli scenari "-piano" sono suonati piano apposta: non vanno confrontati con il volume normale.
+    items = [r for r in results if r["category"] == category and not r["name"].endswith("-piano") and r["metrics"][key] is not None]
     if len(items) < 2:
         return []
     median = statistics.median(r["metrics"][key] for r in items)

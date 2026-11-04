@@ -1,3 +1,4 @@
+import { clampVelocity } from '../../music/velocity'
 import { LIMITS } from '../limits'
 import { newId } from '../ids'
 import type { Note, NotePatternData, Project } from '../types'
@@ -14,7 +15,7 @@ export function clampNote(note: Note, totalSteps: number): Note {
     pitch: Math.round(clampNumber(note.pitch, 0, 127)),
     start,
     duration: Math.round(clampNumber(note.duration, 1, totalSteps - start)),
-    velocity: clampNumber(note.velocity, 0, 1),
+    velocity: clampVelocity(note.velocity),
   }
 }
 

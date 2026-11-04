@@ -5,7 +5,8 @@ import { LIMITS, MAX_STEPS_PER_BAR } from '../limits'
 import { patternSchema } from './pattern'
 import { trackSchema } from './track'
 
-export const PROJECT_FORMAT_VERSION = 1
+/** 2: le caselle della batteria hanno un'intensità (prima erano solo accese/spente). */
+export const PROJECT_FORMAT_VERSION = 2
 
 const id = z.string().min(1).max(64)
 

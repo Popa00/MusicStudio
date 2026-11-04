@@ -1,4 +1,5 @@
 import { stepsPerBar, type TimeSignature } from '../../music/timing'
+import { clampVelocity } from '../../music/velocity'
 import { LIMITS } from '../limits'
 import type { Pattern, Project } from '../types'
 import { overlaps } from './clips'
@@ -8,8 +9,9 @@ export function patternSteps(pattern: Pattern, ts: TimeSignature): number {
   return pattern.lengthBars * stepsPerBar(ts)
 }
 
-function resizeSteps(row: boolean[], length: number): boolean[] {
-  return Array.from({ length }, (_, i) => row[i] === true)
+/** Le caselle accese restano accese, con un'intensità sempre nell'intervallo valido. */
+function resizeSteps(row: number[], length: number): number[] {
+  return Array.from({ length }, (_, i) => (row[i] > 0 ? clampVelocity(row[i]) : 0))
 }
 
 /** Cambia la lunghezza del pattern: le caselle in più sono vuote, le note oltre la fine vengono tolte. */

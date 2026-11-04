@@ -28,15 +28,15 @@ describe('toggleDrumStep', () => {
     const f = fixture()
     const on = toggleDrumStep(f.project, f.drumId, 'snare', 4)
     const p = pattern(on, f.drumId)
-    expect(p.kind === 'drums' && p.steps.snare[4]).toBe(true)
+    expect(p.kind === 'drums' && p.steps.snare[4]).toBe(0.9)
     const off = pattern(toggleDrumStep(on, f.drumId, 'snare', 4), f.drumId)
-    expect(off.kind === 'drums' && off.steps.snare[4]).toBe(false)
+    expect(off.kind === 'drums' && off.steps.snare[4]).toBe(0)
   })
   it("funziona sull'ultimo step di un pattern di 2 battute", () => {
     const f = fixture()
     const long = setPatternLength(f.project, f.drumId, 2)
     const p = pattern(toggleDrumStep(long, f.drumId, 'kick', 31), f.drumId)
-    expect(p.kind === 'drums' && p.steps.kick[31]).toBe(true)
+    expect(p.kind === 'drums' && p.steps.kick[31]).toBe(0.9)
   })
   it('non cambia i pattern di note né il progetto originale', () => {
     const f = fixture()
@@ -44,7 +44,7 @@ describe('toggleDrumStep', () => {
     expect(pattern(next, f.noteId)).toBe(pattern(f.project, f.noteId))
     toggleDrumStep(f.project, f.drumId, 'kick', 0)
     const orig = pattern(f.project, f.drumId)
-    expect(orig.kind === 'drums' && orig.steps.kick[0]).toBe(false)
+    expect(orig.kind === 'drums' && orig.steps.kick[0]).toBe(0)
   })
 })
 

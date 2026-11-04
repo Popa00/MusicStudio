@@ -1,5 +1,6 @@
 import { useRef, type PointerEvent } from 'react'
 import { previewNote } from '../../audio/live'
+import { DEFAULT_NOTE_VELOCITY } from '../../music/velocity'
 import type { Note, NotePatternData } from '../../project/types'
 import { changeNote, createNote, deleteNote } from '../../state/actions/noteActions'
 import { useUiStore } from '../../state/uiStore'
@@ -42,7 +43,7 @@ export function useNoteEditing(trackId: string, pattern: NotePatternData, totalS
       return
     }
     const duration = Math.min(useUiStore.getState().noteLength, totalSteps - cell.step)
-    const input = { pitch: cell.pitch, start: cell.step, duration, velocity: 0.8 }
+    const input = { pitch: cell.pitch, start: cell.step, duration, velocity: DEFAULT_NOTE_VELOCITY }
     const noteId = createNote(pattern.id, input, key)
     previewNote(trackId, cell.pitch)
     drag.current = { mode: 'resize', noteId, key, start: cell, original: input, lastPitch: cell.pitch }

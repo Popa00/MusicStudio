@@ -6,7 +6,7 @@ import { parseProject } from './projectFile'
 
 const mixer = { volumeDb: 0, pan: 0, mute: false, solo: false }
 const drumTrack = (id: string, name = id): Track => ({ id, name, kind: 'drums', mixer, effects: [] })
-const empty16 = () => Array<boolean>(16).fill(false)
+const empty16 = () => Array<number>(16).fill(0)
 const drumPattern = (id: string, trackId: string, name = id): Pattern => ({
   id, trackId, name, lengthBars: 1, kind: 'drums',
   steps: { kick: empty16(), snare: empty16(), clap: empty16(), hihatClosed: empty16(), hihatOpen: empty16() },
@@ -73,12 +73,12 @@ describe('normalizeProject: lunghezze', () => {
   it('riallinea le caselle della batteria alla lunghezza del pattern', () => {
     const short = drumPattern('p', 't')
     if (short.kind !== 'drums') throw new Error()
-    short.steps.kick = [true, false, true]
-    short.steps.snare = Array<boolean>(40).fill(true)
+    short.steps.kick = [0.9, 0, 0.5]
+    short.steps.snare = Array<number>(40).fill(0.7)
     const p = normalizeProject(project({ tracks: [drumTrack('t')], patterns: [short] }))
     const steps = p.patterns[0].kind === 'drums' ? p.patterns[0].steps : null
-    expect(steps?.kick).toEqual([true, false, true, ...Array(13).fill(false)])
-    expect(steps?.snare).toEqual(Array(16).fill(true))
+    expect(steps?.kick).toEqual([0.9, 0, 0.5, ...Array(13).fill(0)])
+    expect(steps?.snare).toEqual(Array(16).fill(0.7))
   })
   it('via parseProject: toglie le note oltre la fine e accorcia quelle a cavallo', () => {
     const synth = { ...drumTrack('t'), kind: 'synth', synth: { preset: '', waveform: 'sine', attack: 0.01, decay: 0.1, sustain: 0.5, release: 0.1, cutoff: 1000, resonance: 1 } }

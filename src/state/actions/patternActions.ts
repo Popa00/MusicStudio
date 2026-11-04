@@ -1,4 +1,4 @@
-import { clearPattern, toggleDrumStep } from '../../project/ops/drums'
+import { clearPattern, setDrumStepVelocity, toggleDrumStep } from '../../project/ops/drums'
 import { addPattern, duplicatePattern, removePattern, renamePattern } from '../../project/ops/patterns'
 import { setPatternLength } from '../../project/ops/patternLength'
 import type { DrumVoiceId } from '../../music/drumPattern'
@@ -49,4 +49,9 @@ export function deletePattern(patternId: string): void {
 
 export function toggleStep(patternId: string, voice: DrumVoiceId, step: number): void {
   store().commit(toggleDrumStep(store().project, patternId, voice, step))
+}
+
+/** `dragId` unisce in un solo "annulla" tutto il trascinamento sulla striscia delle intensità. */
+export function setStepVelocity(patternId: string, voice: DrumVoiceId, step: number, velocity: number, dragId?: string): void {
+  store().commit(setDrumStepVelocity(store().project, patternId, voice, step, velocity), dragId)
 }

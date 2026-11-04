@@ -1,7 +1,8 @@
 import type { Project } from '../types'
-import { TemplateBuilder } from './build'
+import { TemplateBuilder, type DrumHitSpec } from './build'
 
-const EIGHTHS = [0, 2, 4, 6, 8, 10, 12, 14]
+/** Charleston a ottavi: forte sul battito, più leggero in mezzo (il ritmo "respira"). */
+const EIGHTHS: DrumHitSpec[] = [0, [2, 0.55], 4, [6, 0.55], 8, [10, 0.55], 12, [14, 0.55]]
 
 /** Ritmo per ogni battuta: la nota base `root` suonata in stile "basso elettronico". */
 function bassBar(root: number, bar: number): [number, number, number][] {
