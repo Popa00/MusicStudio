@@ -1,11 +1,13 @@
 import * as Tone from 'tone'
 import { buildSide, setDecay, STEREO_SPREAD } from './reverb/network'
+import { attachDiffusers } from './reverb/tail'
 import type { EffectNode, SettingsOf } from './types'
 
 const LOW_CUT_HZ = 150
 
 /**
- * Riverbero algoritmico (stile Freeverb) fatto di ritardi, filtri e volumi nativi del browser.
+ * Riverbero algoritmico (stile Freeverb): pettini fatti di ritardi, filtri e volumi nativi del browser,
+ * poi passa-tutto in un AudioWorklet (vedi reverb/tail.ts).
  * Il riverbero "a convoluzione" di Tone suona simile ma costa molto di più, e il costo cresce con
  * la durata della coda: con 2-3 riverberi il motore audio non reggeva (gracchiare, poi silenzio).
  */
@@ -34,19 +36,18 @@ export function createReverb(settings: SettingsOf<'reverb'>): EffectNode {
   dry.connect(output)
   input.connect(mono)
   mono.connect(lowCut)
-  const left = buildSide(ctx, lowCut, 0, nodes)
-  const right = buildSide(ctx, lowCut, STEREO_SPREAD, nodes)
-  left.output.connect(merge, 0, 0)
-  right.output.connect(merge, 0, 1)
+  const sides = [buildSide(ctx, lowCut, 0, nodes), buildSide(ctx, lowCut, STEREO_SPREAD, nodes)]
   merge.connect(wet.input)
   wet.connect(output)
-  const combs = [...left.combs, ...right.combs]
+  const combs = sides.flatMap((side) => side.combs)
   setDecay(ctx, combs, settings.decay, true)
+
+  const tail = attachDiffusers(ctx, sides.map((side) => side.sum), merge)
 
   return {
     input,
     output,
-    ready: Promise.resolve(),
+    ready: tail.ready,
     update: (s) => {
       if (s.type !== 'reverb') return
       dry.gain.rampTo(1 - s.wet, 0.05)
@@ -54,6 +55,7 @@ export function createReverb(settings: SettingsOf<'reverb'>): EffectNode {
       setDecay(ctx, combs, s.decay)
     },
     dispose: () => {
+      tail.dispose()
       for (const n of nodes) n.disconnect()
       for (const n of [input, output, dry, wet]) n.dispose()
     },

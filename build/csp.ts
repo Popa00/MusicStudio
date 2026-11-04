@@ -3,7 +3,9 @@ import type { Plugin } from 'vite'
 // Applicata solo alla build: in sviluppo il React refresh di Vite usa script inline.
 const POLICY = [
   "default-src 'self'",
-  "script-src 'self'",
+  // blob: per gli AudioWorklet (passa-tutto del riverbero): Tone, tramite standardized-audio-context,
+  // scarica il modulo dall'app e lo carica come blob. Un blob lo può creare solo codice già in esecuzione.
+  "script-src 'self' blob:",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "media-src 'self' blob:",

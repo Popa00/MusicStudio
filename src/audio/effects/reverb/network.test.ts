@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { combFeedback, combInputGain } from './network'
+import { combFeedback, combInputGain, diffuserDelays, STEREO_SPREAD } from './network'
 
 const DELAY = 1557 / 44100
 const MAX = 0.98
@@ -55,5 +55,17 @@ describe('combInputGain', () => {
     const v = combInputGain(MAX)
     expect(v).toBeGreaterThan(0)
     expect(Number.isFinite(v)).toBe(true)
+  })
+})
+
+describe('diffuserDelays', () => {
+  it('restituisce i ritardi dei due passa-tutto in secondi', () => {
+    expect(diffuserDelays(0)).toEqual([556 / 44100, 441 / 44100])
+  })
+
+  it('il lato destro è spostato di STEREO_SPREAD campioni a 44,1 kHz', () => {
+    const left = diffuserDelays(0)
+    const right = diffuserDelays(STEREO_SPREAD)
+    right.forEach((d, i) => expect((d - left[i]) * 44100).toBeCloseTo(STEREO_SPREAD, 6))
   })
 })
