@@ -1,4 +1,6 @@
+import { EditableValue } from './EditableValue'
 import { logToPosition, positionToLog, RESOLUTION, roundSignificant } from './sliderScale'
+import { PLAIN, type ValueUnit } from './valueUnits'
 import './controls.css'
 
 interface SliderProps {
@@ -11,11 +13,12 @@ interface SliderProps {
   step?: number
   /** "log" per frequenze e tempi. */
   scale?: 'linear' | 'log'
-  format?: (value: number) => string
+  /** Come mostrare il valore e leggere quello scritto a mano (predefinito: numero con un decimale). */
+  unit?: ValueUnit
   onChange: (value: number) => void
 }
 
-export function Slider({ label, hint, value, min, max, step = 0.01, scale = 'linear', format, onChange }: SliderProps) {
+export function Slider({ label, hint, value, min, max, step = 0.01, scale = 'linear', unit = PLAIN, onChange }: SliderProps) {
   const isLog = scale === 'log'
   const position = isLog ? logToPosition(value, min, max) : value
 
@@ -34,7 +37,7 @@ export function Slider({ label, hint, value, min, max, step = 0.01, scale = 'lin
         value={position}
         onChange={(e) => handleChange(Number(e.target.value))}
       />
-      <output className="slider__value">{format ? format(value) : value}</output>
+      <EditableValue className="slider__value" value={value} min={min} max={max} unit={unit} label={label} round={isLog ? roundSignificant : undefined} onChange={onChange} />
     </label>
   )
 }

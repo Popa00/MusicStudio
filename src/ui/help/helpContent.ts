@@ -37,4 +37,5 @@ export const SHORTCUTS: [string, string][] = [
   ['Esc', 'Toglie la selezione delle note'],
   ['Clic destro', 'Elimina una nota o un blocco'],
   ['Doppio clic su un cursore del mixer', 'Torna al valore iniziale'],
+  ['Clic sul valore di un cursore', 'Scrivi il numero esatto (es. 97, "2,5 khz", "300 ms", "30 sx"), poi Invio; Esc annulla'],
 ]

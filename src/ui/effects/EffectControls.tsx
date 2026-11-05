@@ -1,5 +1,5 @@
 import type { EffectSettings } from '../../project/types'
-import { formatDb, formatHz, formatPercent, formatSeconds } from '../controls/format'
+import { DECIBELS, HERTZ, PERCENT, SECONDS } from '../controls/valueUnits'
 import { Slider } from '../controls/Slider'
 
 type Change = (changes: Partial<EffectSettings>) => void
@@ -18,8 +18,8 @@ export function EffectControls({ effect, onChange }: { effect: EffectSettings; o
     case 'reverb':
       return (
         <>
-          <Slider label="Durata" hint="Quanto dura la coda del riverbero: corto = stanza, lungo = cattedrale" value={effect.decay} min={0.2} max={10} scale="log" format={formatSeconds} onChange={(decay) => onChange({ decay })} />
-          <Slider label="Quantità" hint={WET_HINT} value={effect.wet} min={0} max={1} format={formatPercent} onChange={(wet) => onChange({ wet })} />
+          <Slider label="Durata" hint="Quanto dura la coda del riverbero: corto = stanza, lungo = cattedrale" value={effect.decay} min={0.2} max={10} scale="log" unit={SECONDS} onChange={(decay) => onChange({ decay })} />
+          <Slider label="Quantità" hint={WET_HINT} value={effect.wet} min={0} max={1} unit={PERCENT} onChange={(wet) => onChange({ wet })} />
         </>
       )
     case 'delay':
@@ -35,8 +35,8 @@ export function EffectControls({ effect, onChange }: { effect: EffectSettings; o
               ))}
             </select>
           </label>
-          <Slider label="Ripetizioni" hint="Quante volte si ripete l'eco prima di sparire" value={effect.feedback} min={0} max={0.85} format={formatPercent} onChange={(feedback) => onChange({ feedback })} />
-          <Slider label="Quantità" hint={WET_HINT} value={effect.wet} min={0} max={1} format={formatPercent} onChange={(wet) => onChange({ wet })} />
+          <Slider label="Ripetizioni" hint="Quante volte si ripete l'eco prima di sparire" value={effect.feedback} min={0} max={0.85} unit={PERCENT} onChange={(feedback) => onChange({ feedback })} />
+          <Slider label="Quantità" hint={WET_HINT} value={effect.wet} min={0} max={1} unit={PERCENT} onChange={(wet) => onChange({ wet })} />
         </>
       )
     case 'filter':
@@ -49,23 +49,23 @@ export function EffectControls({ effect, onChange }: { effect: EffectSettings; o
               <option value="highpass">Passa-alto (più sottile)</option>
             </select>
           </label>
-          <Slider label="Frequenza" hint="Il punto in cui il filtro inizia a tagliare" value={effect.frequency} min={20} max={20000} scale="log" format={formatHz} onChange={(frequency) => onChange({ frequency })} />
-          <Slider label="Risonanza" hint="Enfatizza le frequenze vicino al taglio" value={effect.resonance} min={0.1} max={15} step={0.1} format={(v) => v.toFixed(1)} onChange={(resonance) => onChange({ resonance })} />
+          <Slider label="Frequenza" hint="Il punto in cui il filtro inizia a tagliare" value={effect.frequency} min={20} max={20000} scale="log" unit={HERTZ} onChange={(frequency) => onChange({ frequency })} />
+          <Slider label="Risonanza" hint="Enfatizza le frequenze vicino al taglio" value={effect.resonance} min={0.1} max={15} step={0.1} onChange={(resonance) => onChange({ resonance })} />
         </>
       )
     case 'eq':
       return (
         <>
-          <Slider label="Bassi" value={effect.low} min={-24} max={12} step={0.5} format={formatDb} onChange={(low) => onChange({ low })} />
-          <Slider label="Medi" value={effect.mid} min={-24} max={12} step={0.5} format={formatDb} onChange={(mid) => onChange({ mid })} />
-          <Slider label="Acuti" value={effect.high} min={-24} max={12} step={0.5} format={formatDb} onChange={(high) => onChange({ high })} />
+          <Slider label="Bassi" value={effect.low} min={-24} max={12} step={0.5} unit={DECIBELS} onChange={(low) => onChange({ low })} />
+          <Slider label="Medi" value={effect.mid} min={-24} max={12} step={0.5} unit={DECIBELS} onChange={(mid) => onChange({ mid })} />
+          <Slider label="Acuti" value={effect.high} min={-24} max={12} step={0.5} unit={DECIBELS} onChange={(high) => onChange({ high })} />
         </>
       )
     case 'distortion':
       return (
         <>
-          <Slider label="Intensità" hint="Quanto viene 'sporcato' il suono" value={effect.amount} min={0} max={1} format={formatPercent} onChange={(amount) => onChange({ amount })} />
-          <Slider label="Quantità" hint={WET_HINT} value={effect.wet} min={0} max={1} format={formatPercent} onChange={(wet) => onChange({ wet })} />
+          <Slider label="Intensità" hint="Quanto viene 'sporcato' il suono" value={effect.amount} min={0} max={1} unit={PERCENT} onChange={(amount) => onChange({ amount })} />
+          <Slider label="Quantità" hint={WET_HINT} value={effect.wet} min={0} max={1} unit={PERCENT} onChange={(wet) => onChange({ wet })} />
         </>
       )
   }

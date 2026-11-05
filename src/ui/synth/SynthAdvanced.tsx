@@ -1,5 +1,5 @@
 import type { SynthSettings } from '../../project/types'
-import { formatPercent, formatSeconds } from '../controls/format'
+import { PERCENT, SECONDS } from '../controls/valueUnits'
 import { Slider } from '../controls/Slider'
 
 interface Props {
@@ -16,9 +16,9 @@ export function SynthAdvanced({ settings, onChange }: Props) {
       <p className="hint">
         Attacco, Decadimento, Sostegno e Rilascio (ADSR) descrivono come il volume di una nota nasce, si assesta e si spegne.
       </p>
-      <Slider label="Decadimento" hint="Dopo l'attacco, quanto tempo impiega il volume a scendere fino al livello di sostegno" value={settings.decay} min={0.01} max={4} scale="log" format={formatSeconds} onChange={(decay) => edit({ decay })} />
-      <Slider label="Sostegno" hint="Volume che la nota mantiene finché il tasto resta premuto (0% = la nota si spegne da sola)" value={settings.sustain} min={0} max={1} format={formatPercent} onChange={(sustain) => edit({ sustain })} />
-      <Slider label="Risonanza" hint="Enfatizza le frequenze vicino al punto del filtro: valori alti danno un suono 'fischiante'" value={settings.resonance} min={0.1} max={15} step={0.1} format={(v) => v.toFixed(1)} onChange={(resonance) => edit({ resonance })} />
+      <Slider label="Decadimento" hint="Dopo l'attacco, quanto tempo impiega il volume a scendere fino al livello di sostegno" value={settings.decay} min={0.01} max={4} scale="log" unit={SECONDS} onChange={(decay) => edit({ decay })} />
+      <Slider label="Sostegno" hint="Volume che la nota mantiene finché il tasto resta premuto (0% = la nota si spegne da sola)" value={settings.sustain} min={0} max={1} unit={PERCENT} onChange={(sustain) => edit({ sustain })} />
+      <Slider label="Risonanza" hint="Enfatizza le frequenze vicino al punto del filtro: valori alti danno un suono 'fischiante'" value={settings.resonance} min={0.1} max={15} step={0.1} onChange={(resonance) => edit({ resonance })} />
     </div>
   )
 }

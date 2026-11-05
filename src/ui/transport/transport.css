@@ -32,7 +32,7 @@
   gap: 8px;
 }
 
-.transport__bpm output {
+.transport__bpm-value {
   min-width: 72px;
   font-variant-numeric: tabular-nums;
 }

@@ -45,3 +45,31 @@ input[type='text'] {
 .toggle[aria-pressed='false'] {
   background: var(--step-off);
 }
+
+/* Valore accanto a un cursore: sembra testo, al clic diventa un campo da scrivere. */
+.editable-value {
+  background: none;
+  border: none;
+  border-bottom: 1px dashed var(--border);
+  border-radius: 0;
+  padding: 0 2px;
+  color: inherit;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  cursor: text;
+  justify-self: end;
+}
+
+.editable-value:hover {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+}
+
+input[type='text'].editable-value--editing {
+  width: 100%;
+  min-width: 0;
+  padding: 2px 4px;
+  font-size: inherit;
+  text-align: right;
+}

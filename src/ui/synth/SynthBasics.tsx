@@ -1,5 +1,5 @@
 import type { SynthSettings } from '../../project/types'
-import { formatHz, formatSeconds } from '../controls/format'
+import { HERTZ, SECONDS } from '../controls/valueUnits'
 import { Slider } from '../controls/Slider'
 
 const WAVEFORMS: { value: SynthSettings['waveform']; label: string; hint: string }[] = [
@@ -30,9 +30,9 @@ export function SynthBasics({ settings, onChange }: Props) {
           ))}
         </select>
       </label>
-      <Slider label="Brillantezza" hint="Filtro: più basso = suono più scuro e ovattato, più alto = più brillante" value={settings.cutoff} min={50} max={18000} scale="log" format={formatHz} onChange={(cutoff) => edit({ cutoff })} />
-      <Slider label="Attacco" hint="Quanto tempo impiega la nota a raggiungere il volume pieno: corto = colpo secco, lungo = entra piano" value={settings.attack} min={0.001} max={4} scale="log" format={formatSeconds} onChange={(attack) => edit({ attack })} />
-      <Slider label="Rilascio" hint="Quanto la nota continua a suonare dopo averla lasciata" value={settings.release} min={0.01} max={8} scale="log" format={formatSeconds} onChange={(release) => edit({ release })} />
+      <Slider label="Brillantezza" hint="Filtro: più basso = suono più scuro e ovattato, più alto = più brillante" value={settings.cutoff} min={50} max={18000} scale="log" unit={HERTZ} onChange={(cutoff) => edit({ cutoff })} />
+      <Slider label="Attacco" hint="Quanto tempo impiega la nota a raggiungere il volume pieno: corto = colpo secco, lungo = entra piano" value={settings.attack} min={0.001} max={4} scale="log" unit={SECONDS} onChange={(attack) => edit({ attack })} />
+      <Slider label="Rilascio" hint="Quanto la nota continua a suonare dopo averla lasciata" value={settings.release} min={0.01} max={8} scale="log" unit={SECONDS} onChange={(release) => edit({ release })} />
     </div>
   )
 }
