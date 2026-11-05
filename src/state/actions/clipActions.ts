@@ -13,14 +13,14 @@ export function placeClip(trackId: string, startBar: number): void {
   const result = addClip(store().project, trackId, pattern.id, startBar)
   if (!result.clipId) return
   store().commit(result.project)
-  ui().set({ selectedTrackId: trackId, selectedPatternId: pattern.id, selectedClipId: result.clipId })
+  ui().set({ selectedTrackId: trackId, selectedPatternId: pattern.id, selectedClipId: result.clipId, selectedNoteIds: [] })
 }
 
 /** Selezionare un blocco apre il suo pattern nell'editor. */
 export function selectClip(clipId: string): void {
   const clip = store().project.clips.find((c) => c.id === clipId)
   if (!clip) return
-  ui().set({ selectedTrackId: clip.trackId, selectedPatternId: clip.patternId, selectedClipId: clipId, panel: 'editor' })
+  ui().set({ selectedTrackId: clip.trackId, selectedPatternId: clip.patternId, selectedClipId: clipId, selectedNoteIds: [], panel: 'editor' })
 }
 
 export function moveClipTo(clipId: string, startBar: number, dragId: string): void {
@@ -36,5 +36,5 @@ export function copyClip(clipId: string): void {
   const result = duplicateClip(store().project, clipId)
   if (!result.clipId) return
   store().commit(result.project)
-  ui().set({ selectedClipId: result.clipId })
+  ui().set({ selectedClipId: result.clipId, selectedNoteIds: [] })
 }

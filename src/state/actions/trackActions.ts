@@ -7,7 +7,7 @@ import { useUiStore } from '../uiStore'
 const store = () => useProjectStore.getState()
 
 export function selectTrack(trackId: string): void {
-  useUiStore.getState().set({ selectedTrackId: trackId, selectedPatternId: null, selectedClipId: null })
+  useUiStore.getState().set({ selectedTrackId: trackId, selectedPatternId: null, selectedClipId: null, selectedNoteIds: [] })
 }
 
 export function createTrack(kind: TrackKind): void {

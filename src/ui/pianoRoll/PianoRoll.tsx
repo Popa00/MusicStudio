@@ -31,8 +31,9 @@ export function PianoRoll({ trackId, pattern }: { trackId: string; pattern: Note
       </div>
       <p className="hint">
         Clicca per aggiungere una nota (trascina per allungarla) · trascina una nota per spostarla · bordo destro per
-        allungarla · clic destro per cancellarla · nella striscia in basso trascina le barrette per rendere una nota più forte o più
-        leggera · suona con i tasti A-K (Z/X cambiano ottava).
+        allungarla · clic destro per cancellarla · Shift + clic o Shift + trascina sul vuoto per selezionarne più insieme
+        (poi trascina, frecce, Canc, Ctrl+C/V, Ctrl+D) · nella striscia in basso trascina le barrette per rendere una nota
+        più forte o più leggera · suona con i tasti A-K (Z/X cambiano ottava).
       </p>
       <div className="piano-roll__scroll" ref={scrollRef}>
         <div className="piano-roll__body">

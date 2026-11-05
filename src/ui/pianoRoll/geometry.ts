@@ -1,6 +1,8 @@
 /** Nota più acuta e più grave visibili nel piano roll (Do7 e Do1). */
 export const TOP_PITCH = 96
 export const BOTTOM_PITCH = 24
+/** Le note (anche spostate in gruppo) restano nella parte visibile della tastiera. */
+export const PIANO_RANGE = { min: BOTTOM_PITCH, max: TOP_PITCH }
 export const ROW_HEIGHT = 16
 export const STEP_WIDTH = 24
 /** Zona (in pixel) sul bordo destro di una nota che serve ad allungarla. */

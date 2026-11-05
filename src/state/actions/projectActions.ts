@@ -13,7 +13,7 @@ const store = () => useProjectStore.getState()
 
 function resetUi(): void {
   usePlaybackStore.getState().setPlaying(false)
-  useUiStore.getState().set({ selectedTrackId: null, selectedPatternId: null, selectedClipId: null })
+  useUiStore.getState().set({ selectedTrackId: null, selectedPatternId: null, selectedClipId: null, selectedNoteIds: [] })
 }
 
 export function newProject(template: ProjectTemplate): void {

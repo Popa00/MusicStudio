@@ -1,68 +1,83 @@
-import { useRef, type PointerEvent } from 'react'
+import { useRef, useState, type PointerEvent } from 'react'
 import { previewNote } from '../../audio/live'
 import { DEFAULT_NOTE_VELOCITY } from '../../music/velocity'
+import { findPattern } from '../../project/ops/helpers'
 import type { Note, NotePatternData } from '../../project/types'
 import { changeNote, createNote, deleteNote } from '../../state/actions/noteActions'
+import { dragNoteLengths, dragNotes, setNoteSelection } from '../../state/actions/noteSelectionActions'
+import { useProjectStore } from '../../state/projectStore'
 import { useUiStore } from '../../state/uiStore'
-import { cellAt, RESIZE_HANDLE } from './geometry'
+import { noteDrag } from './dragState'
+import { cellAt, PIANO_RANGE } from './geometry'
+import { boxRect, isNearRightEdge, selectInBox, startOnNote, toggleInSelection, type BoxRect, type Drag, type Point } from './noteDragModes'
 
-interface Drag {
-  mode: 'move' | 'resize'
-  noteId: string
-  key: string
-  start: { step: number; pitch: number }
-  original: Pick<Note, 'start' | 'pitch' | 'duration'>
-  lastPitch: number
-}
-
-function localPoint(e: PointerEvent<HTMLDivElement>) {
+function localPoint(e: PointerEvent<HTMLDivElement>): Point {
   const rect = e.currentTarget.getBoundingClientRect()
   return { x: e.clientX - rect.left, y: e.clientY - rect.top }
 }
 
-/** Gestione del mouse sulla griglia: disegna, sposta, allunga e cancella note. */
+function noteNow(patternId: string, noteId: string): Note | undefined {
+  const p = findPattern(useProjectStore.getState().project, patternId)
+  return p?.kind === 'notes' ? p.notes.find((n) => n.id === noteId) : undefined
+}
+
+/**
+ * Mouse sulla griglia: clic sul vuoto disegna una nota; clic su una nota la seleziona e trascinandola
+ * si sposta (o si allunga dal bordo destro) insieme alle altre selezionate. Shift/Ctrl + clic aggiunge
+ * o toglie una nota dalla selezione; Shift/Ctrl + trascinamento sul vuoto seleziona con un rettangolo.
+ */
 export function useNoteEditing(trackId: string, pattern: NotePatternData, totalSteps: number) {
   const drag = useRef<Drag | null>(null)
+  const [box, setBox] = useState<BoxRect | null>(null)
+
+  function begin(d: Drag) {
+    drag.current = d
+    noteDrag.active = true
+  }
 
   function onPointerDown(e: PointerEvent<HTMLDivElement>) {
-    const { x, y } = localPoint(e)
-    const cell = cellAt(x, y, totalSteps)
+    const point = localPoint(e)
+    const cell = cellAt(point.x, point.y, totalSteps)
     const noteEl = (e.target as HTMLElement).closest<HTMLElement>('[data-note-id]')
     const note = pattern.notes.find((n) => n.id === noteEl?.dataset.noteId)
+    const additive = e.shiftKey || e.ctrlKey || e.metaKey
     if (e.button === 2) {
-      if (note) deleteNote(pattern.id, note.id)
+      if (!note) return
+      deleteNote(pattern.id, note.id)
+      setNoteSelection(useUiStore.getState().selectedNoteIds.filter((id) => id !== note.id))
       return
     }
     if (e.button !== 0) return
+    if (note && additive) return toggleInSelection(note.id)
     e.currentTarget.setPointerCapture(e.pointerId)
     const key = `gesture:note:${crypto.randomUUID()}`
     if (note && noteEl) {
-      const nearRightEdge = noteEl.getBoundingClientRect().right - e.clientX <= RESIZE_HANDLE
-      drag.current = { mode: nearRightEdge ? 'resize' : 'move', noteId: note.id, key, start: cell, original: note, lastPitch: note.pitch }
-      if (!nearRightEdge) previewNote(trackId, note.pitch)
-      return
+      const d = startOnNote(pattern.id, note, isNearRightEdge(noteEl, e.clientX), cell, key)
+      if (d.mode === 'move') previewNote(trackId, note.pitch)
+      return begin(d)
     }
+    if (additive) return begin({ mode: 'box', anchor: point, base: e.shiftKey ? useUiStore.getState().selectedNoteIds : [] })
     const duration = Math.min(useUiStore.getState().noteLength, totalSteps - cell.step)
-    const input = { pitch: cell.pitch, start: cell.step, duration, velocity: DEFAULT_NOTE_VELOCITY }
-    const noteId = createNote(pattern.id, input, key)
+    const noteId = createNote(pattern.id, { pitch: cell.pitch, start: cell.step, duration, velocity: DEFAULT_NOTE_VELOCITY }, key)
+    setNoteSelection([noteId])
     previewNote(trackId, cell.pitch)
-    drag.current = { mode: 'resize', noteId, key, start: cell, original: input, lastPitch: cell.pitch }
+    begin({ mode: 'create', key, noteId, start: cell.step })
   }
 
   function onPointerMove(e: PointerEvent<HTMLDivElement>) {
     const d = drag.current
     if (!d) return
-    const { x, y } = localPoint(e)
-    const cell = cellAt(x, y, totalSteps)
-    if (d.mode === 'resize') {
-      const duration = Math.max(1, cell.step - d.original.start + 1)
-      changeNote(pattern.id, d.noteId, { duration }, d.key)
-      return
+    const point = localPoint(e)
+    if (d.mode === 'box') {
+      setBox(boxRect(d.anchor, point))
+      return selectInBox(pattern, d, point, totalSteps)
     }
-    const pitch = d.original.pitch + (cell.pitch - d.start.pitch)
-    const start = d.original.start + (cell.step - d.start.step)
-    changeNote(pattern.id, d.noteId, { pitch, start }, d.key)
-    if (pitch !== d.lastPitch) {
+    const cell = cellAt(point.x, point.y, totalSteps)
+    if (d.mode === 'create') return changeNote(pattern.id, d.noteId, { duration: Math.max(1, cell.step - d.start + 1) }, d.key)
+    if (d.mode === 'resize') return dragNoteLengths(pattern.id, d.originals, cell.step - d.anchor.step, d.key)
+    dragNotes(pattern.id, d.originals, cell.step - d.anchor.step, cell.pitch - d.anchor.pitch, PIANO_RANGE, d.key)
+    const pitch = noteNow(pattern.id, d.grabbedId)?.pitch
+    if (pitch !== undefined && pitch !== d.lastPitch) {
       d.lastPitch = pitch
       previewNote(trackId, pitch, 0.15)
     }
@@ -71,11 +86,13 @@ export function useNoteEditing(trackId: string, pattern: NotePatternData, totalS
   function onPointerUp() {
     const d = drag.current
     drag.current = null
-    if (d?.mode !== 'resize') return
-    // La prossima nota disegnata avrà la stessa lunghezza dell'ultima.
-    const duration = pattern.notes.find((n) => n.id === d.noteId)?.duration
+    noteDrag.active = false
+    setBox(null)
+    // La prossima nota disegnata avrà la stessa lunghezza dell'ultima disegnata o allungata.
+    const noteId = d?.mode === 'create' ? d.noteId : d?.mode === 'resize' && d.originals.length === 1 ? d.originals[0].id : null
+    const duration = noteId ? noteNow(pattern.id, noteId)?.duration : undefined
     if (duration) useUiStore.getState().set({ noteLength: duration })
   }
 
-  return { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp }
+  return { handlers: { onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp }, box }
 }

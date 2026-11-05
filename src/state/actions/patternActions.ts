@@ -8,7 +8,7 @@ import { useUiStore } from '../uiStore'
 const store = () => useProjectStore.getState()
 
 export function selectPattern(trackId: string, patternId: string): void {
-  useUiStore.getState().set({ selectedTrackId: trackId, selectedPatternId: patternId })
+  useUiStore.getState().set({ selectedTrackId: trackId, selectedPatternId: patternId, selectedNoteIds: [] })
 }
 
 export function newPattern(trackId: string): void {

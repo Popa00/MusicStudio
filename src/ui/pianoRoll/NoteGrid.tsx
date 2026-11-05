@@ -5,6 +5,7 @@ import { formatVelocity } from '../../music/velocity'
 import { patternSteps } from '../../project/ops/patternLength'
 import type { NotePatternData } from '../../project/types'
 import { useProjectStore } from '../../state/projectStore'
+import { useUiStore } from '../../state/uiStore'
 import { usePlayingStep } from '../editor/usePlayingStep'
 import { PITCHES, pitchToY, ROW_HEIGHT, STEP_WIDTH } from './geometry'
 import { useNoteEditing } from './useNoteEditing'
@@ -22,7 +23,9 @@ export function NoteGrid({ trackId, pattern }: { trackId: string; pattern: NoteP
   const { scale, timeSignature: ts } = project
   const total = patternSteps(pattern, ts)
   const playingStep = usePlayingStep(pattern.id)
-  const handlers = useNoteEditing(trackId, pattern, total)
+  const { handlers, box } = useNoteEditing(trackId, pattern, total)
+  const selectedIds = useUiStore((s) => s.selectedNoteIds)
+  const selected = new Set(selectedIds)
   const beatWidth = stepsPerBeat(ts) * STEP_WIDTH
   const barWidth = stepsPerBar(ts) * STEP_WIDTH
 
@@ -41,12 +44,13 @@ export function NoteGrid({ trackId, pattern }: { trackId: string; pattern: NoteP
         <div
           key={note.id}
           data-note-id={note.id}
-          className="note-grid__note"
+          className={selected.has(note.id) ? 'note-grid__note note-grid__note--selected' : 'note-grid__note'}
           title={`Intensità ${formatVelocity(note.velocity)}`}
           // Le note più leggere sono più chiare: si vedono subito gli accenti.
           style={{ left: note.start * STEP_WIDTH, top: pitchToY(note.pitch), width: note.duration * STEP_WIDTH - 1, height: ROW_HEIGHT - 1, opacity: 0.35 + 0.65 * note.velocity }}
         />
       ))}
+      {box && <div className="note-grid__box" style={box} />}
       {playingStep !== null && <div className="note-grid__playhead" style={{ left: playingStep * STEP_WIDTH }} />}
     </div>
   )
