@@ -42,9 +42,10 @@ function drumHit(voice: DrumVoiceId, effects: EffectSettings[] = [], velocity = 
   return b.project
 }
 
-function synthNote(presetName: string, pitches: number[], velocity = DEFAULT_NOTE_VELOCITY): Project {
+function synthNote(presetName: string, pitches: number[], velocity = DEFAULT_NOTE_VELOCITY, pan = 0): Project {
   const b = new TemplateBuilder('prova', 120)
   const track = b.synth('Strumento', presetName)
+  b.project = { ...b.project, tracks: b.project.tracks.map((t) => ({ ...t, mixer: { ...t.mixer, pan } })) }
   b.place(b.notePattern(track, 'nota', pitches.map((p) => [p, 0, 8, velocity])), 0)
   return b.project
 }
@@ -79,6 +80,11 @@ export const SCENARIOS: Scenario[] = [
   {
     name: 'strumento-pluck-piano', category: 'strumenti', description: 'Preset "Pluck", accordo di Do suonato piano (intensità 30%)',
     expect: { singleHit: true }, build: () => synthNote('Pluck', [60, 64, 67], 0.3),
+  },
+  // Pan: traccia spostata a destra. Legge a potenza costante: stesso volume percepito di strumento-pluck.
+  {
+    name: 'strumento-pluck-pan', category: 'strumenti', description: 'Preset "Pluck", accordo di Do con pan a destra (0,5)',
+    expect: { singleHit: true }, build: () => synthNote('Pluck', [60, 64, 67], DEFAULT_NOTE_VELOCITY, 0.5),
   },
   ...[1, 3, 8].map((decay) => ({
     name: `effetto-riverbero-${decay}s`, category: 'effetti' as const, description: `Battimani con riverbero di ${decay} s`,

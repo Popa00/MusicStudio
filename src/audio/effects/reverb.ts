@@ -4,6 +4,11 @@ import { attachDiffusers } from './reverb/tail'
 import type { EffectNode, SettingsOf } from './types'
 
 const LOW_CUT_HZ = 150
+/**
+ * Ora la coda arriva stereo fino al mixer (prima il canale la riduceva a mono, perdendo 3 dB):
+ * questo abbassamento tiene il livello del riverbero uguale a quello approvato.
+ */
+const STEREO_TAIL_TRIM = Math.SQRT1_2
 
 /**
  * Riverbero algoritmico (stile Freeverb): pettini fatti di ritardi, filtri e volumi nativi del browser,
@@ -30,14 +35,17 @@ export function createReverb(settings: SettingsOf<'reverb'>): EffectNode {
   lowCut.frequency.value = LOW_CUT_HZ
   lowCut.Q.value = -3
   const merge = ctx.createChannelMerger(2)
-  nodes.push(mono, lowCut, merge)
+  const tailTrim = ctx.createGain()
+  tailTrim.gain.value = STEREO_TAIL_TRIM
+  nodes.push(mono, lowCut, merge, tailTrim)
 
   input.connect(dry)
   dry.connect(output)
   input.connect(mono)
   mono.connect(lowCut)
   const sides = [buildSide(ctx, lowCut, 0, nodes), buildSide(ctx, lowCut, STEREO_SPREAD, nodes)]
-  merge.connect(wet.input)
+  merge.connect(tailTrim)
+  tailTrim.connect(wet.input)
   wet.connect(output)
   const combs = sides.flatMap((side) => side.combs)
   setDecay(ctx, combs, settings.decay, true)

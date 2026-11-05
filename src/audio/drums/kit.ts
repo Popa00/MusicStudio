@@ -13,6 +13,10 @@ const KIT_LEVEL_DB = -3
 /** Batteria sintetizzata: nessun campione audio, tutti i suoni sono generati. */
 export function createDrumKit(): DrumKit {
   const bus = new Tone.Gain(dbToAmplitude(KIT_LEVEL_DB))
+  // La batteria è mono (al centro): il rumore di Tone è stereo, con i due lati diversi, e senza
+  // questa riduzione charleston e battimani diventerebbero una "nuvola" larga e 3 dB più forte.
+  bus.channelCount = 1
+  bus.channelCountMode = 'explicit'
   // Il contesto del bus: quello dal vivo, oppure quello offline durante l'export.
   const now = () => bus.context.currentTime
   const voices: DrumVoices = {

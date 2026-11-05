@@ -257,46 +257,46 @@
   "picco_db": -22.0,
   "picco_reale_db": -21.8,
   "rms_db": -50.4,
-  "lufs": -38.9,
+  "lufs": -38.8,
   "dinamica_db": 28.4,
   "saturazione_pct": 0.0,
   "dc": -0.0,
-  "brillantezza_hz": 2430,
+  "brillantezza_hz": 2497,
   "bande_pct": {
    "sub (<60)": 0.0,
    "bassi (60-250)": 0.1,
-   "medio-bassi (250-1k)": 7.6,
-   "medi (1k-4k)": 80.9,
-   "acuti (4k-10k)": 10.1,
-   "aria (>10k)": 1.4
+   "medio-bassi (250-1k)": 7.4,
+   "medi (1k-4k)": 80.0,
+   "acuti (4k-10k)": 11.0,
+   "aria (>10k)": 1.6
   },
-  "coda_s": 0.98,
+  "coda_s": 0.93,
   "fine_db": -180.0,
   "silenzio_piu_lungo_s": 0.0,
-  "correlazione_stereo": 1.0
+  "correlazione_stereo": 0.5
  },
  "effetto-riverbero-3s": {
   "durata_s": 5.0,
   "picco_db": -22.0,
   "picco_reale_db": -21.8,
   "rms_db": -51.8,
-  "lufs": -42.8,
-  "dinamica_db": 29.9,
+  "lufs": -42.7,
+  "dinamica_db": 29.8,
   "saturazione_pct": 0.0,
   "dc": 0.0,
-  "brillantezza_hz": 2271,
+  "brillantezza_hz": 2389,
   "bande_pct": {
    "sub (<60)": 0.0,
    "bassi (60-250)": 0.1,
-   "medio-bassi (250-1k)": 7.9,
-   "medi (1k-4k)": 82.8,
-   "acuti (4k-10k)": 8.0,
-   "aria (>10k)": 1.1
+   "medio-bassi (250-1k)": 7.6,
+   "medi (1k-4k)": 81.3,
+   "acuti (4k-10k)": 9.6,
+   "aria (>10k)": 1.4
   },
-  "coda_s": 2.48,
+  "coda_s": 2.34,
   "fine_db": -180.0,
   "silenzio_piu_lungo_s": 0.0,
-  "correlazione_stereo": 1.0
+  "correlazione_stereo": 0.55
  },
  "effetto-riverbero-8s": {
   "durata_s": 10.0,
@@ -306,20 +306,20 @@
   "lufs": -46.6,
   "dinamica_db": 33.2,
   "saturazione_pct": 0.0,
-  "dc": -0.0,
-  "brillantezza_hz": 2183,
+  "dc": 0.0,
+  "brillantezza_hz": 2337,
   "bande_pct": {
    "sub (<60)": 0.0,
    "bassi (60-250)": 0.1,
-   "medio-bassi (250-1k)": 8.5,
-   "medi (1k-4k)": 83.1,
-   "acuti (4k-10k)": 7.3,
-   "aria (>10k)": 1.0
+   "medio-bassi (250-1k)": 8.0,
+   "medi (1k-4k)": 81.3,
+   "acuti (4k-10k)": 9.2,
+   "aria (>10k)": 1.4
   },
-  "coda_s": 5.85,
+  "coda_s": 5.5,
   "fine_db": -180.0,
   "silenzio_piu_lungo_s": 0.0,
-  "correlazione_stereo": 1.0
+  "correlazione_stereo": 0.6
  },
  "effetto-delay": {
   "durata_s": 4.0,
@@ -524,6 +524,29 @@
    "aria (>10k)": 0.0
   },
   "coda_s": 1.16,
+  "fine_db": -180.0,
+  "silenzio_piu_lungo_s": 0.0,
+  "correlazione_stereo": 1.0
+ },
+ "strumento-pluck-pan": {
+  "durata_s": 4.0,
+  "picco_db": -7.3,
+  "picco_reale_db": -7.3,
+  "rms_db": -34.5,
+  "lufs": -27.8,
+  "dinamica_db": 27.1,
+  "saturazione_pct": 0.0,
+  "dc": 0.0,
+  "brillantezza_hz": 767,
+  "bande_pct": {
+   "sub (<60)": 0.0,
+   "bassi (60-250)": 1.2,
+   "medio-bassi (250-1k)": 73.9,
+   "medi (1k-4k)": 24.8,
+   "acuti (4k-10k)": 0.2,
+   "aria (>10k)": 0.0
+  },
+  "coda_s": 1.17,
   "fine_db": -180.0,
   "silenzio_piu_lungo_s": 0.0,
   "correlazione_stereo": 1.0
