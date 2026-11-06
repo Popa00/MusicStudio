@@ -5,6 +5,7 @@ import type { DrumPatternData } from '../../project/types'
 import { useProjectStore } from '../../state/projectStore'
 import { usePlayingStep } from '../editor/usePlayingStep'
 import { DrumVelocityLane } from './DrumVelocityLane'
+import { RhythmPicker } from './RhythmPicker'
 import { StepRow } from './StepRow'
 import './sequencer.css'
 
@@ -17,6 +18,7 @@ export function StepSequencer({ pattern }: { pattern: DrumPatternData }) {
 
   return (
     <div className="sequencer">
+      <RhythmPicker key={pattern.id} patternId={pattern.id} />
       <p className="hint">
         Clicca le caselle per accendere un colpo. Ogni gruppo di {perBeat} caselle è un battito. Nella striscia in basso
         trascina le barrette per rendere un colpo più forte o più leggero. Puoi suonare la batteria anche con i tasti A S

@@ -34,6 +34,8 @@ export const SHORTCUTS: [string, string][] = [
   ['Ctrl+C / Ctrl+X / Ctrl+V', 'Copia / taglia / incolla le note (incolla subito dopo)'],
   ['Ctrl+D', 'Duplica le note selezionate subito dopo'],
   ['Frecce', "Sposta le note selezionate (con Shift: un battito o un'ottava)"],
+  ['Ritmo pronto (batteria)', 'Scegli un genere: il pattern si riempie subito con un ritmo tipico; Base o Ricco cambiano versione (Ctrl+Z per tornare indietro)'],
+  ['Blocca sulla scala', "Le note disegnate, spostate (anche con le frecce) o suonate restano sulle note della scala; \"Adatta alla scala\" corregge quelle già scritte"],
   ['Esc', 'Toglie la selezione delle note'],
   ['Clic destro', 'Elimina una nota o un blocco'],
   ['Doppio clic su un cursore del mixer', 'Torna al valore iniziale'],

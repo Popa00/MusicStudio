@@ -1,6 +1,8 @@
 import type { DrumVoiceId } from '../../../src/music/drumPattern'
 import { DEFAULT_DRUM_VELOCITY, DEFAULT_NOTE_VELOCITY } from '../../../src/music/velocity'
 import { createEffectSettings } from '../../../src/project/effectDefaults'
+import { GENRE_RHYTHMS } from '../../../src/project/rhythms/genres'
+import type { GenreRhythm } from '../../../src/project/rhythms/build'
 import { SYNTH_PRESETS } from '../../../src/project/synthPresets'
 import { TEMPLATES } from '../../../src/project/templates'
 import { TemplateBuilder } from '../../../src/project/templates/build'
@@ -54,6 +56,14 @@ function withEffect(type: EffectSettings['type'], changes: Partial<EffectSetting
   return { ...createEffectSettings(type), ...changes } as EffectSettings
 }
 
+/** Ritmo pronto (versione Ricca) alla velocità tipica del genere, per due battute. */
+function genreRhythm(genre: GenreRhythm): Project {
+  const b = new TemplateBuilder('prova', genre.bpm)
+  const track = b.drums('Batteria')
+  b.place(b.drumPattern(track, genre.name, genre.variants[1].hits), 0, 1)
+  return b.project
+}
+
 /** Brano di esempio con una sola traccia in "solo": per misurare il volume di ogni strumento. */
 function soloTrack(index: number): Project {
   const project = TEMPLATES[0].create()
@@ -94,6 +104,10 @@ export const SCENARIOS: Scenario[] = [
     name: 'effetto-delay', category: 'effetti', description: 'Battimani con eco (1/8, ripetizioni 40%)',
     expect: { singleHit: true }, build: () => drumHit('clap', [withEffect('delay', { time: '8n', feedback: 0.4, wet: 0.5 })]),
   },
+  ...GENRE_RHYTHMS.map((genre) => ({
+    name: `ritmo-${genre.id}`, category: 'brani' as const, description: `Ritmo pronto "${genre.name}" (Ricco), ${genre.bpm} BPM`,
+    expect: { mix: true }, build: () => genreRhythm(genre),
+  })),
   ...TEMPLATES.filter((t) => t.id !== 'blank').map((t) => ({
     name: `brano-${t.id}`, category: 'brani' as const, description: `Brano completo "${t.name}"`,
     expect: { mix: true }, build: t.create,

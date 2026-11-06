@@ -58,3 +58,23 @@
   outline: 2px solid var(--text);
   outline-offset: -2px;
 }
+
+.rhythm-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 8px;
+}
+
+.rhythm-picker__tempo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.rhythm-picker__description {
+  flex-basis: 100%;
+  margin: 0;
+}
