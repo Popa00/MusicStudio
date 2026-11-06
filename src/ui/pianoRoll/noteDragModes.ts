@@ -1,8 +1,9 @@
 import { notesInRect } from '../../project/ops/noteGroup'
 import type { Note, NotePatternData } from '../../project/types'
-import { selectedNotes, setNoteSelection } from '../../state/actions/noteSelectionActions'
+import { dragNotes, selectedNotes, setNoteSelection } from '../../state/actions/noteSelectionActions'
+import { dragNotesInScale, lockedScale } from '../../state/actions/scaleLockActions'
 import { useUiStore } from '../../state/uiStore'
-import { cellAt, RESIZE_HANDLE } from './geometry'
+import { cellAt, PIANO_RANGE, RESIZE_HANDLE } from './geometry'
 
 export type Cell = { step: number; pitch: number }
 export type Point = { x: number; y: number }
@@ -32,6 +33,15 @@ export function startOnNote(patternId: string, note: Note, nearRightEdge: boolea
   const originals = isSelected ? selectedNotes(patternId) : [note]
   if (nearRightEdge) return { mode: 'resize', key, anchor: cell, originals }
   return { mode: 'move', key, anchor: cell, originals, grabbedId: note.id, lastPitch: note.pitch }
+}
+
+/** Sposta il gruppo trascinato; con "Blocca sulla scala" in verticale va di nota della scala in nota della scala. */
+export function moveGroup(patternId: string, d: Extract<Drag, { mode: 'move' }>, cell: Cell): void {
+  const dStep = cell.step - d.anchor.step
+  const dPitch = cell.pitch - d.anchor.pitch
+  const grabbed = d.originals.find((n) => n.id === d.grabbedId)
+  if (grabbed && lockedScale()) return dragNotesInScale(patternId, d.originals, grabbed.pitch, dStep, dPitch, PIANO_RANGE, d.key)
+  dragNotes(patternId, d.originals, dStep, dPitch, PIANO_RANGE, d.key)
 }
 
 export function isNearRightEdge(noteEl: HTMLElement, clientX: number): boolean {

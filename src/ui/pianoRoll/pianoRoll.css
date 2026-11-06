@@ -11,7 +11,16 @@
 
 .scale-selector {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 12px;
+}
+
+.scale-selector__lock {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
 }
 
 .piano-roll__scroll {

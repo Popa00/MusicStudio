@@ -18,6 +18,13 @@ export const SCALE_LABELS: Record<ScaleType, string> = {
   pentatonicMinor: 'Pentatonica minore (blues, rock)',
 }
 
+const CHROMATIC = Array.from({ length: 12 }, (_, i) => i)
+
+/** Gradi della scala in semitoni dalla tonica, in ordine (con "none" tutti e 12). */
+export function scaleIntervals(type: ScaleType): readonly number[] {
+  return type === 'none' ? CHROMATIC : INTERVALS[type]
+}
+
 /** True se la nota (numero MIDI) appartiene alla scala con quella tonica (0 = Do). */
 export function isInScale(pitch: number, root: number, type: ScaleType): boolean {
   if (type === 'none') return true

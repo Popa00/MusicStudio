@@ -1,3 +1,4 @@
+import { scaleIntervals } from '../../music/scales'
 import { stepsPerBeat } from '../../music/timing'
 import {
   copySelectedNotes,
@@ -10,6 +11,7 @@ import {
   selectedNotes,
   setNoteSelection,
 } from '../../state/actions/noteSelectionActions'
+import { lockedScale, nudgeSelectedInScale } from '../../state/actions/scaleLockActions'
 import { useProjectStore } from '../../state/projectStore'
 import { resolveSelection } from '../../state/selection'
 import { useUiStore } from '../../state/uiStore'
@@ -75,6 +77,13 @@ export function handleNoteShortcut(e: KeyboardEvent): boolean {
   }
   const delta = arrowDelta(e.code, e.shiftKey, stepsPerBeat(useProjectStore.getState().project.timeSignature))
   if (!delta) return false
+  // Con "Blocca sulla scala", su/giù vanno di una nota della scala (con Shift, un'ottava intera).
+  const scale = lockedScale()
+  if (scale && delta[1] !== 0) {
+    const degrees = Math.sign(delta[1]) * (e.shiftKey ? scaleIntervals(scale.type).length : 1)
+    nudgeSelectedInScale(patternId, degrees, PIANO_RANGE)
+    return true
+  }
   nudgeSelected(patternId, delta[0], delta[1], PIANO_RANGE)
   return true
 }

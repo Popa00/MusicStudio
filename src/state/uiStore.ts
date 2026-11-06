@@ -28,6 +28,8 @@ interface UiState {
   octave: number
   /** Lunghezza, in step, delle nuove note disegnate nel piano roll. */
   noteLength: number
+  /** Blocca sulla scala: le note disegnate, spostate o suonate restano sulle note della scala. */
+  scaleLock: boolean
   set: (changes: Partial<Omit<UiState, 'set'>>) => void
 }
 
@@ -42,5 +44,6 @@ export const useUiStore = create<UiState>()((set) => ({
   panel: 'editor',
   octave: 4,
   noteLength: 4,
+  scaleLock: true,
   set: (changes) => set(changes),
 }))

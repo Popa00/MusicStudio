@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { previewNoteOff, previewNoteOn } from '../../audio/live'
+import { lockPitch } from '../../state/actions/scaleLockActions'
 import { useProjectStore } from '../../state/projectStore'
 import { resolveSelection } from '../../state/selection'
 import { useUiStore } from '../../state/uiStore'
@@ -24,9 +25,11 @@ export function useComputerKeyboard(): void {
         ui.set({ octave: Math.min(MAX_OCTAVE, Math.max(MIN_OCTAVE, octave)) })
         return
       }
-      const pitch = pitchForKey(e.code, ui.octave)
+      const keyPitch = pitchForKey(e.code, ui.octave)
       const trackId = selectedTrackId()
-      if (pitch === null || !trackId || held.has(e.code)) return
+      if (keyPitch === null || !trackId || held.has(e.code)) return
+      // Con "Blocca sulla scala" un tasto fuori scala suona la nota della scala più vicina.
+      const pitch = lockPitch(keyPitch)
       held.set(e.code, { trackId, pitch })
       previewNoteOn(trackId, pitch)
     }
