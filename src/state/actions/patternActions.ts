@@ -4,6 +4,7 @@ import { setPatternLength } from '../../project/ops/patternLength'
 import type { DrumVoiceId } from '../../music/drumPattern'
 import { useProjectStore } from '../projectStore'
 import { useUiStore } from '../uiStore'
+import { showAlert } from '../browserDialogs'
 
 const store = () => useProjectStore.getState()
 
@@ -33,7 +34,7 @@ export function setPatternBars(patternId: string, bars: number): void {
   const current = store().project
   const next = setPatternLength(current, patternId, bars)
   if (next === current) {
-    window.alert('Non c\'è spazio: allungando il pattern i suoi blocchi finirebbero sopra altri blocchi del brano. Sposta prima i blocchi successivi.')
+    showAlert('Non c\'è spazio: allungando il pattern i suoi blocchi finirebbero sopra altri blocchi del brano. Sposta prima i blocchi successivi.')
     return
   }
   store().commit(next)

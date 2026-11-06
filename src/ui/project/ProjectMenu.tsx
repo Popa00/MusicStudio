@@ -3,6 +3,7 @@ import { PROJECT_EXTENSION } from '../../io/projectFile'
 import { exportProjectWav, openProjectFile, saveProjectFile } from '../../state/actions/projectActions'
 import { noFocus } from '../keepFocusOnMouseDown'
 import { NewProjectDialog } from './NewProjectDialog'
+import { askConfirm } from '../../state/browserDialogs'
 
 /** Nuovo, Apri, Salva su file, Esporta WAV. */
 export function ProjectMenu() {
@@ -13,7 +14,7 @@ export function ProjectMenu() {
 
   async function handleOpen(file: File | undefined) {
     if (!file) return
-    if (!window.confirm('Aprire un altro progetto? Le modifiche non salvate su file di quello attuale andranno perse.')) return
+    if (!askConfirm('Aprire un altro progetto? Le modifiche non salvate su file di quello attuale andranno perse.')) return
     setMessage(await openProjectFile(file))
   }
 

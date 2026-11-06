@@ -2,13 +2,14 @@ import type { Track } from '../../project/types'
 import { deleteTrack, selectTrack, setMixer, setTrackName } from '../../state/actions/trackActions'
 import { useSelection } from '../../state/useSelection'
 import { noFocus } from '../keepFocusOnMouseDown'
+import { askConfirm } from '../../state/browserDialogs'
 
 export function TrackHeader({ track }: { track: Track }) {
   const { track: selected } = useSelection()
   const isSelected = selected?.id === track.id
 
   function handleDelete() {
-    if (window.confirm(`Eliminare la traccia "${track.name}" con tutti i suoi pattern?`)) deleteTrack(track.id)
+    if (askConfirm(`Eliminare la traccia "${track.name}" con tutti i suoi pattern?`)) deleteTrack(track.id)
   }
 
   return (

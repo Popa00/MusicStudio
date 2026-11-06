@@ -3,6 +3,7 @@ import type { Pattern, Track } from '../../project/types'
 import { copyPattern, deletePattern, emptyPattern, newPattern, selectPattern, setPatternBars, setPatternName } from '../../state/actions/patternActions'
 import { useProjectStore } from '../../state/projectStore'
 import { noFocus } from '../keepFocusOnMouseDown'
+import { askConfirm } from '../../state/browserDialogs'
 
 const LENGTHS = [1, 2, 4, 8]
 
@@ -12,7 +13,7 @@ export function PatternBar({ track, pattern }: { track: Track; pattern: Pattern 
   const patterns = patternsOfTrack(project, track.id)
 
   function confirmThen(message: string, action: () => void) {
-    if (window.confirm(message)) action()
+    if (askConfirm(message)) action()
   }
 
   return (

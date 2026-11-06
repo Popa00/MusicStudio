@@ -1,11 +1,12 @@
 import { TEMPLATES, type ProjectTemplate } from '../../project/templates'
 import { newProject } from '../../state/actions/projectActions'
 import { Dialog } from '../controls/Dialog'
+import { askConfirm } from '../../state/browserDialogs'
 
 /** Scelta del punto di partenza per un nuovo progetto. */
 export function NewProjectDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   function choose(template: ProjectTemplate) {
-    if (!window.confirm('Iniziare un nuovo progetto? Quello attuale verrà sostituito (salvalo prima su file se vuoi tenerlo).')) return
+    if (!askConfirm('Iniziare un nuovo progetto? Quello attuale verrà sostituito (salvalo prima su file se vuoi tenerlo).')) return
     newProject(template)
     onClose()
   }
