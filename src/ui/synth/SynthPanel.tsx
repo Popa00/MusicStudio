@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { findPreset, SYNTH_PRESETS } from '../../project/synthPresets'
+import { findPreset, PRESET_CATEGORIES, SYNTH_PRESETS } from '../../project/synthPresets'
 import type { SynthTrack } from '../../project/types'
 import { applyPreset, setSynth } from '../../state/actions/trackActions'
 import { noFocus } from '../keepFocusOnMouseDown'
@@ -20,10 +20,14 @@ export function SynthPanel({ track }: { track: SynthTrack }) {
         Preset{' '}
         <select value={findPreset(settings.preset) ? settings.preset : ''} onChange={(e) => applyPreset(track.id, e.target.value)}>
           {!findPreset(settings.preset) && <option value="">Personalizzato</option>}
-          {SYNTH_PRESETS.map((p) => (
-            <option key={p.name} value={p.name} title={p.description}>
-              {p.name}
-            </option>
+          {PRESET_CATEGORIES.map((category) => (
+            <optgroup key={category} label={category}>
+              {SYNTH_PRESETS.filter((p) => p.category === category).map((p) => (
+                <option key={p.name} value={p.name} title={p.description}>
+                  {p.name}
+                </option>
+              ))}
+            </optgroup>
           ))}
         </select>
       </label>

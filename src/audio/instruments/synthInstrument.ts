@@ -21,8 +21,11 @@ export function synthLevelDb(settings: SynthSettings): number {
   return SYNTH_LEVEL_DB + WAVEFORM_TRIM_DB[settings.waveform]
 }
 
-/** Note contemporanee per traccia: oltre, la nota più vecchia viene interrotta. */
-const MAX_VOICES = 10
+/**
+ * Note contemporanee per traccia, code di rilascio comprese: oltre, Tone scarta le note nuove.
+ * Con 10 gli accordi di suoni a coda lunga (es. Tappeto scuro, 4 s) perdevano note.
+ */
+const MAX_VOICES = 16
 
 function frequency(pitch: number): number {
   return Tone.Frequency(pitch, 'midi').toFrequency()

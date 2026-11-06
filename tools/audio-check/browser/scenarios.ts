@@ -68,8 +68,8 @@ export const SCENARIOS: Scenario[] = [
   ...SYNTH_PRESETS.map((preset) => ({
     name: `strumento-${preset.name.toLowerCase().replace(/\s+/g, '-')}`, category: 'strumenti' as const,
     description: `Preset "${preset.name}", accordo di Do`,
-    expect: { singleHit: true, ...(preset.name === 'Basso' ? { centroidMaxHz: 1200 } : {}) },
-    build: () => synthNote(preset.name, preset.name === 'Basso' ? [36] : [60, 64, 67]),
+    expect: { singleHit: true, ...(preset.category === 'Bassi' ? { centroidMaxHz: 1200 } : {}) },
+    build: () => synthNote(preset.name, preset.category === 'Bassi' ? [36] : [60, 64, 67]),
   })),
   // Intensità: stessi suoni suonati piano (30%). Rispetto a batteria-kick (90%) e strumento-pluck (80%)
   // il picco deve scendere di circa 9,5 dB e 8,5 dB, e il suono restare pulito.
