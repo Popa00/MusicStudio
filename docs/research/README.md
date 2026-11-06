@@ -19,6 +19,8 @@ non è stata confermata (verificare con `npm view tone version`).
 | [07-export-projects.md](07-export-projects.md) | export WAV/MP3/MIDI, formato e salvataggio progetto, packaging |
 | [08-ux.md](08-ux.md) | metronomo, tastiera virtuale, scorciatoie, preset, onboarding, controlli UI |
 | [09-drum-sounds.md](09-drum-sounds.md) | batteria sintetizzata vs campioni: qualità per strumento, librerie gratuite e licenze, raccomandazione MVP |
+| [10-prossime-funzionalita.md](10-prossime-funzionalita.md) | prossime funzionalità per chi non sa musica (scala bloccata, accordi e progressioni, pattern per genere, arpeggiatore, dado, sezioni), suoni più ricchi (chorus, LFO, sidechain), UX; top 8 ordinata |
+| [11-percussioni.md](11-percussioni.md) | percussioni extra per 8 generi (808 lungo, rimshot, shaker, tom, tamburello, cowbell, conga, piatti): ricette di sintesi Tone.js, cosa richiede campioni, ordine consigliato, impatto su UI sequencer e formato progetto |
 
 ## Mini-glossario
 
@@ -74,6 +76,7 @@ UX
 - Automazione con curve a punti (volume, pan, cutoff, wet).
 - Export MP3 (lamejs / mp3-encoder WASM), salvataggio diretto su file (File System Access, solo Chromium), progetti `.zip` con audio.
 - Altre metriche (3/4, 6/8), preset utente, tutorial guidato, glossario, modalità semplice/avanzata, count-in, tap tempo.
+- Aiuti per non musicisti (priorità e ordine in `10`): scala bloccata, pattern di batteria per genere, accordi e progressioni, template per genere, dado/humanize, sezioni del brano.
 
 ### Nice-to-have
 - Sintesi wavetable (AudioWorklet), time-stretch di qualità, pitch shift clip.
