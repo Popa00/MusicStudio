@@ -20,6 +20,13 @@ export function setDrumStepVelocity(project: Project, patternId: string, voice: 
   return mapDrumSteps(project, patternId, (steps) => setStepVelocity(steps, voice, step, velocity))
 }
 
+/** Spegne tutte le caselle di un suono nel pattern. */
+export function clearDrumRow(project: Project, patternId: string, voice: DrumVoiceId): Project {
+  return mapDrumSteps(project, patternId, (steps) =>
+    steps[voice].some((v) => v > 0) ? { ...steps, [voice]: steps[voice].map(() => 0) } : steps,
+  )
+}
+
 /** Svuota un pattern: tutte le caselle (batteria) o tutte le note (strumento). */
 export function clearPattern(project: Project, patternId: string): Project {
   return mapPattern(project, patternId, (p) =>

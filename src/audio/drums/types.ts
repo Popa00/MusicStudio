@@ -7,10 +7,9 @@ export interface DrumVoice {
   dispose: () => void
 }
 
-export type DrumVoices = Record<DrumVoiceId, DrumVoice>
-
 export interface DrumKit {
-  voices: DrumVoices
+  /** Fa suonare un suono del kit (creato al primo uso). */
+  trigger: (voice: DrumVoiceId, time: number, velocity: number) => void
   output: Tone.ToneAudioNode
   dispose: () => void
 }

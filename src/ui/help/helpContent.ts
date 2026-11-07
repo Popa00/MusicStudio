@@ -4,6 +4,7 @@ export const GETTING_STARTED = [
   'Clicca un blocco per modificarlo nel pannello in basso: la griglia per la batteria, il piano roll per gli strumenti.',
   'Nel piano roll le righe chiare sono le note della scala: usandole è difficile stonare.',
   'Suona con la tastiera del PC (tasti A S D F G H J K) per trovare le note a orecchio, poi disegnale.',
+  'Vuoi effetti o volume solo per un suono della batteria (es. il charleston)? Premi ⇱ accanto al suo nome: va su una traccia "Percussione" tutta sua. Oppure crea una traccia con "+ Percussione".',
   'Usa "Solo pattern" per ascoltare in loop solo quello che stai modificando.',
   'Quando ti piace, "Esporta WAV" crea il file audio della canzone.',
 ]
@@ -16,6 +17,7 @@ export const GLOSSARY: [string, string][] = [
   ['Scala / Tonalità', 'L\'insieme di note che "stanno bene insieme". Maggiore suona allegra, minore malinconica.'],
   ['Preset', 'Un suono già pronto dello strumento, da usare così o da ritoccare.'],
   ['Attacco / Rilascio', 'Quanto velocemente una nota entra e quanto continua a suonare dopo averla lasciata.'],
+  ['Percussione', 'Una traccia con un solo suono di batteria, suonato come uno strumento: il Do centrale è il suono originale, le note più alte lo rendono più acuto. Ha effetti, volume e pan tutti suoi.'],
   ['Effetto', 'Trasforma il suono di una traccia: riverbero (eco di stanza), delay (eco a tempo), filtro, distorsione…'],
   ['Mixer', 'Dove si bilanciano i volumi delle tracce e la loro posizione tra cassa sinistra e destra (pan).'],
   ['dB (decibel)', 'Unità del volume. 0 dB = volume normale, valori negativi = più piano.'],

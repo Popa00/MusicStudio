@@ -78,3 +78,31 @@
   flex-basis: 100%;
   margin: 0;
 }
+
+.sequencer__label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sequencer__name {
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.sequencer__name:hover {
+  color: var(--accent);
+}
+
+.sequencer__remove {
+  padding: 0 6px;
+  line-height: 1.4;
+}
+
+.sequencer__add {
+  margin: 2px 0 10px;
+}

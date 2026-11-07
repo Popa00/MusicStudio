@@ -9,10 +9,15 @@ import { selectedNotes } from './noteSelectionActions'
 
 const store = () => useProjectStore.getState()
 
-/** La scala a cui agganciare le note, oppure null se il blocco è spento o la scala è "nessuna". */
+/**
+ * La scala a cui agganciare le note, oppure null se il blocco è spento, la scala è "nessuna" o la
+ * traccia è una percussione (lì l'altezza della nota cambia il suono, non la melodia).
+ */
 export function lockedScale(): ScaleRef | null {
-  const { scale } = store().project
-  return useUiStore.getState().scaleLock && scale.type !== 'none' ? scale : null
+  const { scale, tracks } = store().project
+  const { scaleLock, selectedTrackId } = useUiStore.getState()
+  if (tracks.find((t) => t.id === selectedTrackId)?.kind === 'percussion') return null
+  return scaleLock && scale.type !== 'none' ? scale : null
 }
 
 /** Altezza da usare per una nota nuova o suonata: con il blocco attivo, la nota della scala più vicina. */

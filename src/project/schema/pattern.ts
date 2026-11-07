@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { EXTRA_DRUM_VOICES, type DrumVoiceId, type ExtraDrumVoiceId } from '../../music/drumPattern'
 import { LIMITS, MAX_PATTERN_STEPS } from '../limits'
 
 const id = z.string().min(1).max(64)
@@ -14,13 +15,22 @@ export const noteSchema = z.object({
   velocity: z.number().min(0).max(1),
 })
 
-export const drumStepsSchema = z.object({
-  kick: steps,
-  snare: steps,
-  clap: steps,
-  hihatClosed: steps,
-  hihatOpen: steps,
-})
+const extraRows = Object.fromEntries(EXTRA_DRUM_VOICES.map((voice) => [voice, steps.optional()])) as Record<
+  ExtraDrumVoiceId,
+  z.ZodOptional<typeof steps>
+>
+
+/**
+ * Le 5 righe di base ci sono sempre; le percussioni aggiunte dopo sono facoltative (i progetti
+ * precedenti non le hanno) e, se mancano, diventano righe vuote lunghe quanto le altre.
+ */
+export const drumStepsSchema = z
+  .object({ kick: steps, snare: steps, clap: steps, hihatClosed: steps, hihatOpen: steps, ...extraRows })
+  .transform((rows): Record<DrumVoiceId, number[]> => {
+    const filled = { ...rows } as Record<DrumVoiceId, number[]>
+    for (const voice of EXTRA_DRUM_VOICES) filled[voice] = rows[voice] ?? Array<number>(rows.kick.length).fill(0)
+    return filled
+  })
 
 const patternBase = {
   id,

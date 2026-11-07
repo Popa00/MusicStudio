@@ -9,8 +9,15 @@ import { ScaleSelector } from './ScaleSelector'
 import { scrollTopFor } from './geometry'
 import './pianoRoll.css'
 
+interface PianoRollProps {
+  trackId: string
+  pattern: NotePatternData
+  /** Tonalità e scala servono alle melodie, non a una percussione. */
+  showScale?: boolean
+}
+
 /** Editor delle note: in verticale l'altezza (grave in basso, acuto in alto), in orizzontale il tempo. */
-export function PianoRoll({ trackId, pattern }: { trackId: string; pattern: NotePatternData }) {
+export function PianoRoll({ trackId, pattern, showScale = true }: PianoRollProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   // Quando si apre un pattern (non a ogni nota modificata), centra la vista sulle sue note o sul Do centrale.
@@ -27,7 +34,7 @@ export function PianoRoll({ trackId, pattern }: { trackId: string; pattern: Note
     <div className="piano-roll">
       <div className="piano-roll__header">
         <h3>Note</h3>
-        <ScaleSelector patternId={pattern.id} />
+        {showScale && <ScaleSelector patternId={pattern.id} />}
       </div>
       <p className="hint">
         Clicca per aggiungere una nota (trascina per allungarla) · trascina una nota per spostarla · bordo destro per

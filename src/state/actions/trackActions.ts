@@ -1,6 +1,8 @@
+import type { DrumVoiceId } from '../../music/drumPattern'
+import { addPercussionTrack, updatePercussion } from '../../project/ops/percussion'
 import { findPreset } from '../../project/synthPresets'
 import { addTrack, removeTrack, renameTrack, updateMixer, updateSynth } from '../../project/ops/tracks'
-import type { MixerSettings, SynthSettings, TrackKind } from '../../project/types'
+import type { MixerSettings, PercussionSound, SynthSettings, TrackKind } from '../../project/types'
 import { useProjectStore } from '../projectStore'
 import { useUiStore } from '../uiStore'
 
@@ -41,4 +43,18 @@ export function setSynth(trackId: string, changes: Partial<SynthSettings>): void
 export function applyPreset(trackId: string, presetName: string): void {
   const preset = findPreset(presetName)
   if (preset) store().commit(updateSynth(store().project, trackId, preset.settings))
+}
+
+export function setPercussion(trackId: string, changes: Partial<PercussionSound>): void {
+  const key = `percussion:${trackId}:${Object.keys(changes).join(',')}`
+  store().commit(updatePercussion(store().project, trackId, changes), key)
+}
+
+/** Nuova traccia con un solo suono di batteria, da suonare come uno strumento. */
+export function createPercussionTrack(voice: DrumVoiceId, label: string): void {
+  const result = addPercussionTrack(store().project, voice, label)
+  if (!result.trackId) return
+  store().commit(result.project)
+  selectTrack(result.trackId)
+  useUiStore.getState().set({ panel: 'editor' })
 }

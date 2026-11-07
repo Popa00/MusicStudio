@@ -6,19 +6,20 @@ import { barSeconds } from '../../music/timing'
 import { createGraph, type AudioGraph } from '../graph/graph'
 import { guardContextTimeouts } from '../safety'
 import { scheduleSequencer } from '../sequencer'
+import { soundTailSeconds } from './soundTail'
 
 /** Frequenza fissa: con schede audio a 96/192 kHz la memoria dell'export esploderebbe. */
 const EXPORT_SAMPLE_RATE = 44100
 const MIN_TAIL_SECONDS = 2
 const MAX_TAIL_SECONDS = 10
 
-/** Secondi in più alla fine, per far sfumare riverberi e rilasci delle note. */
+/** Secondi in più alla fine, per far sfumare riverberi, rilasci delle note e piatti. */
 export function tailSeconds(project: Project): number {
   const tails = project.tracks.flatMap((t) => [
     ...t.effects.filter((e) => e.enabled && e.type === 'reverb').map((e) => (e.type === 'reverb' ? e.decay : 0)),
     t.kind === 'synth' ? t.synth.release : 0,
   ])
-  return Math.min(MAX_TAIL_SECONDS, Math.max(MIN_TAIL_SECONDS, ...tails))
+  return Math.min(MAX_TAIL_SECONDS, Math.max(MIN_TAIL_SECONDS, soundTailSeconds(project), ...tails))
 }
 
 export function exportDurationSeconds(project: Project): number {

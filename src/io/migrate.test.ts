@@ -34,7 +34,7 @@ describe('parseAnyVersion: file versione 1', () => {
     const result = parseAnyVersion(toV1(v2))
     expect(result.success).toBe(true)
     if (!result.success) return
-    expect(result.data).toEqual({ ...flat, formatVersion: 2 })
+    expect(result.data).toEqual({ ...flat, formatVersion: 3 })
   })
   it('mantiene la posizione dei colpi: stessi step accesi di prima', () => {
     const v2 = electronicBeat()
@@ -100,7 +100,7 @@ describe('parseAnyVersion: file versione 2 e altre', () => {
   })
   it('rifiuta versioni sconosciute, mancanti o dati che non sono oggetti', () => {
     const base = JSON.parse(JSON.stringify(electronicBeat())) as Json
-    for (const formatVersion of [0, 3, -1, '1', undefined]) {
+    for (const formatVersion of [0, 4, -1, '1', undefined]) {
       expect(parseAnyVersion({ ...base, formatVersion }).success).toBe(false)
     }
     for (const junk of [null, undefined, 5, 'x', [], [1]]) expect(parseAnyVersion(junk).success).toBe(false)

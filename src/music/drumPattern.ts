@@ -1,8 +1,19 @@
 import { clampVelocity, DEFAULT_DRUM_VELOCITY } from './velocity'
 
-export const DRUM_VOICES = ['kick', 'snare', 'clap', 'hihatClosed', 'hihatOpen'] as const
+/** I 5 suoni sempre visibili (e sempre presenti nei progetti di ogni versione). */
+export const BASE_DRUM_VOICES = ['kick', 'snare', 'clap', 'hihatClosed', 'hihatOpen'] as const
+
+/** Percussioni in più: righe nascoste finché non si aggiungono o non hanno colpi. */
+export const EXTRA_DRUM_VOICES = [
+  'kick808', 'rimshot', 'snap', 'tomLow', 'tomMid', 'tomHigh',
+  'shaker', 'tambourine', 'conga', 'bongo', 'cowbell', 'clave', 'perc',
+  'crash', 'ride', 'rideBell',
+] as const
+
+export const DRUM_VOICES = [...BASE_DRUM_VOICES, ...EXTRA_DRUM_VOICES] as const
 
 export type DrumVoiceId = (typeof DRUM_VOICES)[number]
+export type ExtraDrumVoiceId = (typeof EXTRA_DRUM_VOICES)[number]
 
 /** Per ogni suono, una casella per step: 0 = spenta, altrimenti l'intensità del colpo (0-1). */
 export type DrumPattern = Record<DrumVoiceId, number[]>

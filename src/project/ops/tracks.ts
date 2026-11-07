@@ -4,7 +4,7 @@ import { synthSettingsSchema } from '../schema/track'
 import type { MixerSettings, Project, SynthSettings, TrackKind } from '../types'
 import { clampNumber, mapTrack, nextName } from './helpers'
 
-const DEFAULT_NAMES: Record<TrackKind, string> = { drums: 'Batteria', synth: 'Strumento' }
+const DEFAULT_NAMES: Record<TrackKind, string> = { drums: 'Batteria', synth: 'Strumento', percussion: 'Percussione' }
 
 /** Aggiunge una traccia con un primo pattern vuoto. */
 export function addTrack(project: Project, kind: TrackKind): { project: Project; trackId: string | null } {

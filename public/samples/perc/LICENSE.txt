@@ -1,0 +1,18 @@
+Percussion samples (tambourine.wav, shaker.wav, conga.wav, bongo.wav)
+
+License: CC0 1.0 Universal (public domain dedication)
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Sources and original files:
+- tambourine.wav <- VCSL (Versilian Community Sample Library), https://github.com/sgossner/VCSL
+                    Idiophones/Struck Idiophones/Tambourine 1/Tamb1_Hit_v2_rr1_Mid.wav
+                    License: https://raw.githubusercontent.com/sgossner/VCSL/master/LICENSE
+- shaker.wav     <- Virtuosity Drums, https://github.com/sfzinstruments/virtuosity_drums
+                    Samples/perc/close/shaker/LShaker_Shake1D_rr3_Close.wav
+- conga.wav      <- Virtuosity Drums, Samples/perc/close/conga/Conga_22_HitN_51_100_rr1_Close.wav
+- bongo.wav      <- Virtuosity Drums, Samples/perc/close/bongoh/BongoH_Hit1_v2_rr1_Close.wav
+                    License: https://raw.githubusercontent.com/sfzinstruments/virtuosity_drums/master/LICENSE
+
+Changes made for Music Studio: mono (tambourine: left channel only, the two channels were
+out of phase), leading silence removed, shortened with a cosine fade-out, peak-normalized
+to -3 dBFS, 16-bit 44.1 kHz WAV.

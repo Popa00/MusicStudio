@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createEmptyProject } from '../factory'
+import { createEmptyPattern } from '../../music/drumPattern'
 import { LIMITS } from '../limits'
 import type { Pattern } from '../types'
 import { addClip, overlaps } from './clips'
@@ -15,8 +16,7 @@ function must<T>(value: T | null | undefined): T {
 }
 
 function drumPattern(lengthBars: number, kick: number[]): Pattern {
-  const empty = Array<number>(kick.length).fill(0)
-  return { id: 'p', trackId: 't', name: 'P', lengthBars, kind: 'drums', steps: { kick, snare: empty, clap: empty, hihatClosed: empty, hihatOpen: empty } }
+  return { id: 'p', trackId: 't', name: 'P', lengthBars, kind: 'drums', steps: { ...createEmptyPattern(kick.length), kick } }
 }
 
 function notePattern(lengthBars: number, notes: [number, number][]): Pattern {

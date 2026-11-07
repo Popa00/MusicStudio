@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { DRUM_VOICES } from '../../music/drumPattern'
 import { LIMITS } from '../limits'
 import { effectSchema } from './effects'
 
@@ -37,10 +38,30 @@ export const synthTrackSchema = z.object({
   synth: synthSettingsSchema,
 })
 
-export const trackSchema = z.discriminatedUnion('kind', [drumTrackSchema, synthTrackSchema])
+/**
+ * Un solo suono di batteria suonato come strumento: le note del piano roll lo rendono più acuto o
+ * più grave (il Do centrale è il suono originale) e la traccia ha i suoi effetti e il suo mixer.
+ */
+export const percussionSoundSchema = z.object({
+  voice: z.enum(DRUM_VOICES),
+  /** Intonazione di base, in semitoni. */
+  tune: z.number().min(-12).max(12),
+  /** Quanta parte della coda tenere: 1 = tutta, 0.1 = colpo cortissimo. */
+  length: z.number().min(0.05).max(1),
+})
+
+export const percussionTrackSchema = z.object({
+  ...trackBase,
+  kind: z.literal('percussion'),
+  sound: percussionSoundSchema,
+})
+
+export const trackSchema = z.discriminatedUnion('kind', [drumTrackSchema, synthTrackSchema, percussionTrackSchema])
 
 export type SynthSettings = z.infer<typeof synthSettingsSchema>
 export type MixerSettings = z.infer<typeof mixerSchema>
 export type Track = z.infer<typeof trackSchema>
 export type SynthTrack = z.infer<typeof synthTrackSchema>
+export type PercussionSound = z.infer<typeof percussionSoundSchema>
+export type PercussionTrack = z.infer<typeof percussionTrackSchema>
 export type TrackKind = Track['kind']

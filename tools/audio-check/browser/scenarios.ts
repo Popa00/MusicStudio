@@ -6,6 +6,7 @@ import type { GenreRhythm } from '../../../src/project/rhythms/build'
 import { SYNTH_PRESETS } from '../../../src/project/synthPresets'
 import { TEMPLATES } from '../../../src/project/templates'
 import { TemplateBuilder } from '../../../src/project/templates/build'
+import { PERCUSSION_SCENARIOS } from './percussionScenarios'
 import type { EffectSettings, Project } from '../../../src/project/types'
 
 export type Category = 'batteria' | 'strumenti' | 'effetti' | 'brani' | 'bilanciamento'
@@ -34,6 +35,22 @@ const DRUMS: { voice: DrumVoiceId; label: string; expect: Expectation }[] = [
   { voice: 'clap', label: 'Battimani', expect: { centroidMinHz: 700, centroidMaxHz: 5000 } },
   { voice: 'hihatClosed', label: 'Charleston chiuso', expect: { centroidMinHz: 5000 } },
   { voice: 'hihatOpen', label: 'Charleston aperto', expect: { centroidMinHz: 5000 } },
+  { voice: 'kick808', label: 'Cassa 808', expect: { centroidMaxHz: 400 } },
+  { voice: 'rimshot', label: 'Rimshot', expect: { centroidMinHz: 700 } },
+  { voice: 'snap', label: 'Snap', expect: { centroidMinHz: 1000 } },
+  { voice: 'tomLow', label: 'Tom basso', expect: { centroidMaxHz: 1000 } },
+  { voice: 'tomMid', label: 'Tom medio', expect: { centroidMaxHz: 1200 } },
+  { voice: 'tomHigh', label: 'Tom alto', expect: { centroidMaxHz: 1500 } },
+  { voice: 'shaker', label: 'Shaker (registrato)', expect: { centroidMinHz: 5000 } },
+  { voice: 'tambourine', label: 'Tamburello (registrato)', expect: { centroidMinHz: 5000 } },
+  { voice: 'conga', label: 'Conga (registrata)', expect: {} },
+  { voice: 'bongo', label: 'Bongo (registrato)', expect: {} },
+  { voice: 'cowbell', label: 'Campanaccio', expect: { centroidMinHz: 500 } },
+  { voice: 'clave', label: 'Clave', expect: { centroidMinHz: 1500 } },
+  { voice: 'perc', label: 'Perc', expect: {} },
+  { voice: 'crash', label: 'Crash (registrato)', expect: { centroidMinHz: 2000 } },
+  { voice: 'ride', label: 'Ride (registrato)', expect: { centroidMinHz: 2000 } },
+  { voice: 'rideBell', label: 'Campana del ride (registrato)', expect: { centroidMinHz: 1500 } },
 ]
 
 function drumHit(voice: DrumVoiceId, effects: EffectSettings[] = [], velocity = DEFAULT_DRUM_VELOCITY): Project {
@@ -81,6 +98,7 @@ export const SCENARIOS: Scenario[] = [
     expect: { singleHit: true, ...(preset.category === 'Bassi' ? { centroidMaxHz: 1200 } : {}) },
     build: () => synthNote(preset.name, preset.category === 'Bassi' ? [36] : [60, 64, 67]),
   })),
+  ...PERCUSSION_SCENARIOS,
   // Intensità: stessi suoni suonati piano (30%). Rispetto a batteria-kick (90%) e strumento-pluck (80%)
   // il picco deve scendere di circa 9,5 dB e 8,5 dB, e il suono restare pulito.
   {

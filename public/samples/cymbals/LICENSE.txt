@@ -1,0 +1,17 @@
+Cymbal samples (crash.wav, ride.wav, ride-bell.wav)
+
+Source: Virtuosity Drums by Versilian Studios
+https://github.com/sfzinstruments/virtuosity_drums
+https://versilian-studios.com/virtuosity-drums/
+
+License: CC0 1.0 Universal (public domain dedication)
+https://creativecommons.org/publicdomain/zero/1.0/
+Full text: https://raw.githubusercontent.com/sfzinstruments/virtuosity_drums/master/LICENSE
+
+Original files (overhead microphones):
+- crash.wav     <- Samples/oh/crash/oh_crash_crash_vl3_rr1.flac
+- ride.wav      <- Samples/oh/ride/oh_ride_ride_vl3_rr1.flac
+- ride-bell.wav <- Samples/oh/ride/oh_ride_bell_vl2_rr1.flac
+
+Changes made for Music Studio: mixed to mono, trimmed (4 s / 3 s / 2.5 s) with a
+cosine fade-out, peak-normalized to -3 dBFS, saved as 16-bit 44.1 kHz WAV.

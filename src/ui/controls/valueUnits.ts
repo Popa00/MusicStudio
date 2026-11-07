@@ -77,3 +77,12 @@ export const PAN: ValueUnit = {
     return n / 100
   },
 }
+
+/** Intonazione in semitoni (il passo tra due tasti vicini del pianoforte). */
+export const SEMITONES: ValueUnit = {
+  format: (v) => `${v > 0 ? '+' : ''}${Math.round(v)} semitoni`,
+  parse: (text) => {
+    const n = readNumber(text)
+    return n === null ? null : Math.round(n)
+  },
+}

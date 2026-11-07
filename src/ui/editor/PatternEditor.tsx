@@ -1,5 +1,6 @@
 import type { Pattern, Track } from '../../project/types'
 import { newPattern } from '../../state/actions/patternActions'
+import { PercussionPanel } from '../percussion/PercussionPanel'
 import { PianoRoll } from '../pianoRoll/PianoRoll'
 import { StepSequencer } from '../sequencer/StepSequencer'
 import { SynthPanel } from '../synth/SynthPanel'
@@ -19,10 +20,10 @@ export function PatternEditor({ track, pattern }: { track: Track; pattern: Patte
     <div className="pattern-editor">
       <PatternBar track={track} pattern={pattern} />
       {pattern.kind === 'drums' && <StepSequencer pattern={pattern} />}
-      {pattern.kind === 'notes' && track.kind === 'synth' && (
+      {pattern.kind === 'notes' && track.kind !== 'drums' && (
         <div className="pattern-editor__synth">
-          <SynthPanel track={track} />
-          <PianoRoll trackId={track.id} pattern={pattern} />
+          {track.kind === 'synth' ? <SynthPanel track={track} /> : <PercussionPanel track={track} />}
+          <PianoRoll trackId={track.id} pattern={pattern} showScale={track.kind === 'synth'} />
         </div>
       )}
     </div>

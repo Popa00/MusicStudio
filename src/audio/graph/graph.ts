@@ -76,7 +76,7 @@ export function createGraph(project: Project): AudioGraph {
       rebuildAndOpen()
     },
     ready: async () => {
-      await Promise.all([...nodes.values()].flatMap((n) => n.effects.map((e) => e.ready)))
+      await Promise.all([...nodes.values()].flatMap((n) => [n.instrument.ready, ...n.effects.map((e) => e.ready)]))
     },
     dispose: () => {
       if (resetTimer) clearTimeout(resetTimer)

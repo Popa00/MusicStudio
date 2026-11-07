@@ -5,6 +5,8 @@ import type { Track } from '../../project/types'
 /** Qualcosa che produce suono per una traccia: batteria o sintetizzatore. */
 export interface Instrument {
   readonly output: Tone.ToneAudioNode
+  /** Si risolve quando i suoni registrati sono pronti (serve all'export); sempre risolta, anche se falliscono. */
+  readonly ready?: Promise<void>
   /** Suona un evento programmato a un tempo preciso. */
   play: (event: TriggerEvent, time: number, stepSeconds: number) => void
   /** Suona dal vivo (tastiera del PC, click sul piano roll). */

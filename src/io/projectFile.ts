@@ -1,4 +1,5 @@
 import { LIMITS } from '../project/limits'
+import { compactProject } from './compact'
 import type { Project } from '../project/types'
 import { PROJECT_FORMAT_VERSION } from '../project/schema/project'
 import { parseAnyVersion } from './migrate'
@@ -9,7 +10,7 @@ export const PROJECT_EXTENSION = '.msproj'
 export type ParseResult = { ok: true; project: Project } | { ok: false; error: string }
 
 export function serializeProject(project: Project): string {
-  return JSON.stringify(project)
+  return JSON.stringify(compactProject(project))
 }
 
 /**

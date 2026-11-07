@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import type { DrumVoiceId } from '../music/drumPattern'
 import type { NoteInput } from '../project/ops/notes'
 
 export type PlayMode = 'song' | 'pattern'
@@ -30,6 +31,8 @@ interface UiState {
   noteLength: number
   /** Blocca sulla scala: le note disegnate, spostate o suonate restano sulle note della scala. */
   scaleLock: boolean
+  /** Percussioni in più mostrate nella griglia di ogni traccia batteria (oltre a quelle con colpi). */
+  drumRows: Record<string, DrumVoiceId[]>
   set: (changes: Partial<Omit<UiState, 'set'>>) => void
 }
 
@@ -45,5 +48,6 @@ export const useUiStore = create<UiState>()((set) => ({
   octave: 4,
   noteLength: 4,
   scaleLock: true,
+  drumRows: {},
   set: (changes) => set(changes),
 }))

@@ -16,11 +16,11 @@ function v1Text(project: Project): string {
 }
 
 describe('parseProject: migrazione da versione 1', () => {
-  it('apre un file v1 e lo porta alla versione 2 con colpi a 0,9', () => {
+  it('apre un file v1 e lo porta alla versione 3 con colpi a 0,9', () => {
     const result = parseProject(v1Text(electronicBeat()))
     expect(result.ok).toBe(true)
     if (!result.ok) return
-    expect(result.project.formatVersion).toBe(2)
+    expect(result.project.formatVersion).toBe(3)
     for (const p of result.project.patterns) {
       if (p.kind !== 'drums') continue
       for (const v of DRUM_VOICES) expect(p.steps[v].every((x) => x === 0 || x === 0.9)).toBe(true)

@@ -51,7 +51,7 @@ describe('parseProject con file non validi', () => {
     expectError(parseProject(JSON.stringify(senza)), 'dati non validi')
   })
   it('per una versione più recente dell app dà un messaggio dedicato', () => {
-    for (const formatVersion of [3, 99]) {
+    for (const formatVersion of [4, 99]) {
       const data = { ...createEmptyProject(), formatVersion }
       expectError(parseProject(JSON.stringify(data)), 'versione più recente')
     }

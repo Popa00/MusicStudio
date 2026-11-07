@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { createEmptyPattern } from '../music/drumPattern'
 import { createEmptyProject } from '../project/factory'
 import type { Pattern, Project, Track } from '../project/types'
 import { normalizeProject } from './normalize'
@@ -6,10 +7,9 @@ import { parseProject } from './projectFile'
 
 const mixer = { volumeDb: 0, pan: 0, mute: false, solo: false }
 const drumTrack = (id: string, name = id): Track => ({ id, name, kind: 'drums', mixer, effects: [] })
-const empty16 = () => Array<number>(16).fill(0)
 const drumPattern = (id: string, trackId: string, name = id): Pattern => ({
   id, trackId, name, lengthBars: 1, kind: 'drums',
-  steps: { kick: empty16(), snare: empty16(), clap: empty16(), hihatClosed: empty16(), hihatOpen: empty16() },
+  steps: createEmptyPattern(16),
 })
 const notePattern = (id: string, trackId: string, notes: [string, number, number][] = []): Pattern => ({
   id, trackId, name: id, lengthBars: 1, kind: 'notes',

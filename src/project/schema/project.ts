@@ -5,8 +5,12 @@ import { LIMITS, MAX_STEPS_PER_BAR } from '../limits'
 import { patternSchema } from './pattern'
 import { trackSchema } from './track'
 
-/** 2: le caselle della batteria hanno un'intensità (prima erano solo accese/spente). */
-export const PROJECT_FORMAT_VERSION = 2
+/**
+ * 2: le caselle della batteria hanno un'intensità (prima erano solo accese/spente).
+ * 3: nuove percussioni (righe facoltative) e tracce "percussione singola": un'app più vecchia
+ *    le perderebbe senza avvisare.
+ */
+export const PROJECT_FORMAT_VERSION = 3
 
 const id = z.string().min(1).max(64)
 

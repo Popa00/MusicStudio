@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { DEFAULT_DRUM_VELOCITY } from '../music/velocity'
 import { LIMITS, MAX_PATTERN_STEPS } from '../project/limits'
 import { drumPatternSchema, notePatternSchema } from '../project/schema/pattern'
-import { projectSchema } from '../project/schema/project'
+import { PROJECT_FORMAT_VERSION, projectSchema } from '../project/schema/project'
 import type { Project } from '../project/types'
 
 /** Versione 1: le caselle della batteria erano solo accese (true) o spente (false). */
@@ -39,8 +39,13 @@ function toV2(project: V1Project): unknown {
   return { ...project, formatVersion: 2, patterns }
 }
 
-function isV1(data: unknown): boolean {
-  return typeof data === 'object' && data !== null && (data as { formatVersion?: unknown }).formatVersion === 1
+function versionOf(data: unknown): unknown {
+  return typeof data === 'object' && data !== null ? (data as { formatVersion?: unknown }).formatVersion : undefined
+}
+
+/** 2 → 3: stesso contenuto (le nuove percussioni sono righe facoltative), cambia solo il numero. */
+function toV3(data: object): object {
+  return { ...data, formatVersion: PROJECT_FORMAT_VERSION }
 }
 
 /**
@@ -49,8 +54,10 @@ function isV1(data: unknown): boolean {
  * e validato di nuovo: i colpi accesi prendono la forza che avevano sempre avuto, il suono non cambia.
  */
 export function parseAnyVersion(data: unknown): ParseOutcome {
-  if (!isV1(data)) return projectSchema.safeParse(data)
+  const version = versionOf(data)
+  if (version === 2) return projectSchema.safeParse(toV3(data as object))
+  if (version !== 1) return projectSchema.safeParse(data)
   const v1 = v1ProjectSchema.safeParse(data)
   if (!v1.success) return { success: false, error: v1.error }
-  return projectSchema.safeParse(toV2(v1.data))
+  return projectSchema.safeParse(toV3(toV2(v1.data) as object))
 }
