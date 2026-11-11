@@ -39,6 +39,11 @@ export function absoluteStepAtTicks(ticks: number, ppq: number): number {
   return Math.round(ticks / ticksPerStep)
 }
 
+/** Numero dello step dall'inizio → posizione del trasporto (in tick). */
+export function ticksAtStep(step: number, ppq: number): number {
+  return Math.round((step * ppq * 4) / STEPS_PER_WHOLE_NOTE)
+}
+
 /** Converte la posizione del trasporto (in tick) nell'indice dello step dentro la battuta. */
 export function stepAtTicks(ticks: number, ppq: number, stepsInBar: number): number {
   return absoluteStepAtTicks(ticks, ppq) % stepsInBar

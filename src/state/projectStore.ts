@@ -3,6 +3,7 @@ import { loadAutosave } from '../io/autosave'
 import { electronicBeat } from '../project/templates/electronicBeat'
 import type { Project } from '../project/types'
 import { emptyHistory, record, redo, undo, type History } from './history'
+import { usePlaybackStore } from './playbackStore'
 
 /** Il brano (tutto ciò che viene salvato) e la cronologia per annulla/ripeti. */
 interface ProjectState {
@@ -34,5 +35,9 @@ export const useProjectStore = create<ProjectState>()((set, get) => ({
     const result = redo(get().history, get().project)
     if (result) set({ project: result.value, history: result.history })
   },
-  replace: (project) => set({ project, history: emptyHistory() }),
+  replace: (project) => {
+    // Un altro brano: il punto di partenza scelto in quello vecchio non ha più senso.
+    usePlaybackStore.getState().setStartStep(0)
+    set({ project, history: emptyHistory() })
+  },
 }))

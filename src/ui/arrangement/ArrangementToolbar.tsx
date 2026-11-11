@@ -1,3 +1,4 @@
+import { LIMITS } from '../../project/limits'
 import { copyClip, deleteClip } from '../../state/actions/clipActions'
 import type { DrumVoiceId } from '../../music/drumPattern'
 import { createPercussionTrack, createTrack } from '../../state/actions/trackActions'
@@ -42,7 +43,7 @@ export function ArrangementToolbar() {
         </>
       )}
       <span className="hint">
-        Clicca una casella vuota per inserire il pattern scelto · trascina i blocchi per spostarli · clic destro per toglierli
+        Clicca una casella vuota per inserire il pattern scelto · trascina i blocchi per spostarli · clic destro per toglierli · il brano può arrivare a {LIMITS.songBars} battute: scorri a destra
       </span>
     </header>
   )

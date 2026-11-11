@@ -38,6 +38,7 @@ export const SHORTCUTS: [string, string][] = [
   ['Frecce', "Sposta le note selezionate (con Shift: un battito o un'ottava)"],
   ['Ritmo pronto (batteria)', 'Scegli un genere: il pattern si riempie subito con un ritmo tipico; Base o Ricco cambiano versione (Ctrl+Z per tornare indietro)'],
   ['Blocca sulla scala', "Le note disegnate, spostate (anche con le frecce) o suonate restano sulle note della scala; \"Adatta alla scala\" corregge quelle già scritte"],
+  ['Clic o trascina sui numeri delle battute', 'Sceglie da dove ascoltare il brano: mentre suona salta lì, da fermo il Play parte da lì (un triangolino segna il punto)'],
   ['Esc', 'Toglie la selezione delle note'],
   ['Clic destro', 'Elimina una nota o un blocco'],
   ['Doppio clic su un cursore del mixer', 'Torna al valore iniziale'],

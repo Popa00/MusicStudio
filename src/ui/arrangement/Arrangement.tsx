@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { songLengthBars } from '../../project/ops/clips'
 import { LIMITS } from '../../project/limits'
 import { useProjectStore } from '../../state/projectStore'
@@ -6,20 +7,24 @@ import { BarRuler } from './BarRuler'
 import { visibleBars } from './layout'
 import { TrackHeader } from './TrackHeader'
 import { TrackLane } from './TrackLane'
+import { useFollowPlayhead } from './useFollowPlayhead'
 import './arrangement.css'
 
 /** Linea del tempo: una riga per traccia, i blocchi dicono quale pattern suona in quale battuta. */
 export function Arrangement() {
   const project = useProjectStore((s) => s.project)
-  const bars = visibleBars(songLengthBars(project), LIMITS.songBars)
+  const songBars = songLengthBars(project)
+  const bars = visibleBars(songBars, LIMITS.songBars)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  useFollowPlayhead(scrollRef)
 
   return (
     <section className="arrangement">
       <ArrangementToolbar />
-      <div className="arrangement__scroll">
+      <div className="arrangement__scroll" ref={scrollRef}>
         <div className="arrangement__grid">
           <div className="arrangement__corner" />
-          <BarRuler bars={bars} />
+          <BarRuler bars={bars} songBars={songBars} />
           {project.tracks.map((track) => (
             <div className="arrangement__row" key={track.id}>
               <TrackHeader track={track} />

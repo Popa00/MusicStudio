@@ -43,6 +43,9 @@
 
 .ruler {
   position: relative;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
   display: flex;
   height: 22px;
   color: var(--text-muted);
@@ -53,6 +56,34 @@
   border-left: 1px solid var(--border);
   padding-left: 4px;
   box-sizing: border-box;
+}
+
+.ruler__end {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  /* La scritta sta a sinistra della linea, nella parte vuota dell'ultima battuta. */
+  transform: translateX(-100%);
+  padding: 0 4px;
+  border-right: 2px solid var(--accent);
+  color: var(--accent);
+  font-size: 0.75rem;
+  line-height: 22px;
+  cursor: help;
+}
+
+.playhead.playhead--start {
+  background: var(--accent);
+}
+
+.playhead.playhead--start::before {
+  /* Triangolino in cima: "si parte da qui". */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -4px;
+  border: 5px solid transparent;
+  border-top-color: var(--accent);
 }
 
 .playhead {

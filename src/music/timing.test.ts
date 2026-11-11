@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   absoluteStepAtTicks,
+  ticksAtStep,
   barSeconds,
   BPM_MAX,
   BPM_MIN,
@@ -122,6 +123,22 @@ describe('absoluteStepAtTicks', () => {
   it('stepAtTicks è absoluteStepAtTicks modulo gli step della battuta', () => {
     for (const t of [0, 47, 48 * 16, 48 * 33 + 10]) {
       expect(stepAtTicks(t, 192, 16)).toBe(absoluteStepAtTicks(t, 192) % 16)
+    }
+  })
+})
+
+describe('ticksAtStep', () => {
+  it('converte step in tick con PPQ 192', () => {
+    expect(ticksAtStep(0, 192)).toBe(0)
+    expect(ticksAtStep(1, 192)).toBe(48)
+    expect(ticksAtStep(16, 192)).toBe(48 * 16)
+  })
+  it('scala con il PPQ', () => {
+    expect(ticksAtStep(5, 480)).toBe(600)
+  })
+  it('inverso di absoluteStepAtTicks', () => {
+    for (const step of [0, 1, 15, 16, 100, 1000]) {
+      expect(absoluteStepAtTicks(ticksAtStep(step, 192), 192)).toBe(step)
     }
   })
 })

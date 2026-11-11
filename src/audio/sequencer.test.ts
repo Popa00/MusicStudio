@@ -5,11 +5,14 @@ const transport = vi.hoisted(() => ({
   scheduleRepeat: vi.fn(),
   getTicksAtTime: vi.fn(() => 0),
   clear: vi.fn(),
+  on: vi.fn(),
+  off: vi.fn(),
   PPQ: 192,
 }))
 
 vi.mock('tone', () => ({ getTransport: () => transport }))
 vi.mock('../music/schedule', () => ({ eventsAtStep: vi.fn() }))
+vi.mock('../music/chase', () => ({ sustainedNotesAt: vi.fn(() => []) }))
 
 import { eventsAtStep } from '../music/schedule'
 import { resetReported } from './safety'

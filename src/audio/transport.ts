@@ -1,5 +1,5 @@
 import * as Tone from 'tone'
-import type { TimeSignature } from '../music/timing'
+import { ticksAtStep, type TimeSignature } from '../music/timing'
 
 /** Piccolo anticipo all'avvio, così il primo colpo non viene tagliato. */
 const START_DELAY = '+0.05'
@@ -19,8 +19,18 @@ export function applyTimeSignature(ts: TimeSignature): void {
   Tone.getTransport().timeSignature = [ts.beatsPerBar, ts.beatUnit]
 }
 
-export function startTransport(): void {
-  Tone.getTransport().start(START_DELAY)
+/** Avvia la riproduzione dallo step indicato (0 = dall'inizio). */
+export function startTransport(fromStep = 0): void {
+  const transport = Tone.getTransport()
+  transport.start(START_DELAY, `${ticksAtStep(fromStep, transport.PPQ)}i`)
+}
+
+/** Salta a un altro punto mentre la musica suona. */
+export function seekTransport(step: number): void {
+  const transport = Tone.getTransport()
+  // Gli aggiornamenti grafici già programmati mostrerebbero per un attimo la posizione vecchia.
+  Tone.getDraw().cancel(0)
+  transport.ticks = ticksAtStep(step, transport.PPQ)
 }
 
 export function stopTransport(): void {

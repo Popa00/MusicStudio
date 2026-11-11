@@ -23,24 +23,26 @@ export function patternEventsAt(pattern: Pattern, step: number): TriggerEvent[] 
     .map((n) => ({ kind: 'note', trackId, pitch: n.pitch, durationSteps: n.duration, velocity: n.velocity }))
 }
 
-/** Tutti gli eventi da suonare allo step `globalStep` (contato dall'inizio). */
-export function eventsAtStep(project: Project, target: PlayTarget, globalStep: number): TriggerEvent[] {
+/** I pattern che suonano allo step `globalStep`, ognuno con lo step corrispondente al suo interno. */
+export function patternsAtStep(project: Project, target: PlayTarget, globalStep: number): { pattern: Pattern; local: number }[] {
   if (target.mode === 'pattern') {
     const pattern = findPattern(project, target.patternId)
-    if (!pattern) return []
-    return patternEventsAt(pattern, globalStep % patternSteps(pattern, project.timeSignature))
+    return pattern ? [{ pattern, local: globalStep % patternSteps(pattern, project.timeSignature) }] : []
   }
   const barSteps = stepsPerBar(project.timeSignature)
-  const events: TriggerEvent[] = []
+  const active: { pattern: Pattern; local: number }[] = []
   for (const clip of project.clips) {
     const pattern = findPattern(project, clip.patternId)
     if (!pattern) continue
     const local = globalStep - clip.startBar * barSteps
-    if (local >= 0 && local < patternSteps(pattern, project.timeSignature)) {
-      events.push(...patternEventsAt(pattern, local))
-    }
+    if (local >= 0 && local < patternSteps(pattern, project.timeSignature)) active.push({ pattern, local })
   }
-  return events
+  return active
+}
+
+/** Tutti gli eventi da suonare allo step `globalStep` (contato dall'inizio). */
+export function eventsAtStep(project: Project, target: PlayTarget, globalStep: number): TriggerEvent[] {
+  return patternsAtStep(project, target, globalStep).flatMap(({ pattern, local }) => patternEventsAt(pattern, local))
 }
 
 /** Lunghezza del loop di riproduzione, in battute. */

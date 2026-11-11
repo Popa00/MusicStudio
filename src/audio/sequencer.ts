@@ -1,4 +1,5 @@
 import * as Tone from 'tone'
+import { sustainedNotesAt } from '../music/chase'
 import { eventsAtStep, type PlayTarget } from '../music/schedule'
 import { absoluteStepAtTicks, stepSeconds } from '../music/timing'
 import type { Project } from '../project/types'
@@ -20,13 +21,24 @@ export interface SequencerSource {
  */
 export function scheduleSequencer(graph: AudioGraph, source: SequencerSource, metronome: Metronome | null): () => void {
   const transport = Tone.getTransport()
+  // Il trasporto emette "start" sia al Play sia a ogni salto: il primo step dopo recupera le note in corso.
+  let resumed = true
+  const markResumed = () => {
+    resumed = true
+  }
+  transport.on('start', markResumed)
 
   function playStep(time: number): void {
     const project = source.project()
     const step = absoluteStepAtTicks(transport.getTicksAtTime(time), transport.PPQ)
     const seconds = stepSeconds(project.bpm)
+    const events = eventsAtStep(project, source.target(), step)
+    if (resumed) {
+      resumed = false
+      safely(() => events.push(...sustainedNotesAt(project, source.target(), step)), 'note in corso')
+    }
     // Un errore di un singolo strumento non deve mai fermare il resto della riproduzione.
-    for (const event of eventsAtStep(project, source.target(), step)) {
+    for (const event of events) {
       safely(() => graph.track(event.trackId)?.instrument.play(event, time, seconds))
     }
     if (metronome && source.metronome()) safely(() => metronome.tick(step, project.timeSignature, time))
@@ -35,5 +47,8 @@ export function scheduleSequencer(graph: AudioGraph, source: SequencerSource, me
 
   const id = transport.scheduleRepeat((time) => safely(() => playStep(time), 'passo del sequencer'), '16n', 0)
 
-  return () => transport.clear(id)
+  return () => {
+    transport.clear(id)
+    transport.off('start', markResumed)
+  }
 }

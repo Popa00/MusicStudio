@@ -5,6 +5,7 @@ import { currentPlayTarget } from '../state/playTarget'
 import { useUiStore } from '../state/uiStore'
 import type { AudioGraph } from './graph/graph'
 import { resetReported } from './safety'
+import { bindSeek, playbackStartStep } from './seek'
 import { applyLoop, applyTempo, applyTimeSignature, startTransport, stopTransport } from './transport'
 
 let loopBars = 0
@@ -43,7 +44,7 @@ export function bindStoresToEngine(graph: AudioGraph): () => void {
     if (state.isPlaying) {
       graph.finishSilence()
       resetReported()
-      startTransport()
+      startTransport(playbackStartStep())
     } else {
       stopTransport()
       graph.silence()
@@ -51,7 +52,10 @@ export function bindStoresToEngine(graph: AudioGraph): () => void {
     }
   })
 
+  const unsubscribeSeek = bindSeek(graph)
+
   return () => {
+    unsubscribeSeek()
     unsubscribeProject()
     unsubscribeUi()
     unsubscribePlayback()
