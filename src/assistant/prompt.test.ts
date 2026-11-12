@@ -14,9 +14,10 @@ describe('prompt: regole dell\'assistente', () => {
   it('vieta i contenuti offensivi', () => {
     expect(RULES).toContain('Niente contenuti offensivi')
   })
-  it('systemPrompt contiene le regole e il riassunto', () => {
+  it('systemPrompt contiene le regole, "Ripeti parte" e il riassunto', () => {
     const prompt = systemPrompt('RIASSUNTO-X')
     expect(prompt.startsWith(RULES)).toBe(true)
+    expect(prompt).toContain('Ripeti parte')
     expect(prompt.endsWith('RIASSUNTO-X')).toBe(true)
   })
 })

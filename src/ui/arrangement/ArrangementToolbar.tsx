@@ -1,5 +1,6 @@
 import { LIMITS } from '../../project/limits'
 import { copyClip, deleteClip } from '../../state/actions/clipActions'
+import { loopClip } from '../../state/actions/loopActions'
 import type { DrumVoiceId } from '../../music/drumPattern'
 import { createPercussionTrack, createTrack } from '../../state/actions/trackActions'
 import { useUiStore } from '../../state/uiStore'
@@ -39,6 +40,9 @@ export function ArrangementToolbar() {
           </button>
           <button className="button-small button-secondary" onClick={() => deleteClip(selectedClipId)} title="Elimina il blocco (tasto Canc)" {...noFocus}>
             Elimina blocco
+          </button>
+          <button className="button-small button-secondary" onClick={() => loopClip(selectedClipId)} title="Ascolta in loop le battute di questo blocco, con tutte le tracce" {...noFocus}>
+            🔁 Ripeti blocco
           </button>
         </>
       )}

@@ -1,6 +1,6 @@
-import { loopLengthBars } from '../music/schedule'
+import { activeLoop } from '../music/loopRegion'
 import { stepsPerBar } from '../music/timing'
-import { usePlaybackStore } from '../state/playbackStore'
+import { activeLoopRange, usePlaybackStore } from '../state/playbackStore'
 import { useProjectStore } from '../state/projectStore'
 import { currentPlayTarget } from '../state/playTarget'
 import type { AudioGraph } from './graph/graph'
@@ -8,15 +8,17 @@ import { seekTransport } from './transport'
 
 /**
  * Da dove far partire la musica: il punto scelto sulla riga delle battute, solo in modalità
- * "Brano" e solo se è dentro il brano (altrimenti dall'inizio).
+ * "Brano" e solo se è dentro la parte che gira (il brano, o la parte ripetuta); altrimenti dal suo inizio.
  */
 export function playbackStartStep(): number {
   const target = currentPlayTarget()
   if (target.mode !== 'song') return 0
   const { project } = useProjectStore.getState()
-  const total = loopLengthBars(project, target) * stepsPerBar(project.timeSignature)
-  const { startStep } = usePlaybackStore.getState()
-  return startStep < total ? startStep : 0
+  const playback = usePlaybackStore.getState()
+  const loop = activeLoop(project, target, activeLoopRange(playback))
+  const bar = stepsPerBar(project.timeSignature)
+  const inside = playback.startStep >= loop.start * bar && playback.startStep < loop.end * bar
+  return inside ? playback.startStep : loop.start * bar
 }
 
 /** Mentre la musica suona, ogni richiesta di salto (`seekTo`) la porta al punto di partenza scelto. */

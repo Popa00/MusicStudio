@@ -1,14 +1,15 @@
 import * as Tone from 'tone'
+import type { LoopRange } from '../music/loopRegion'
 import { ticksAtStep, type TimeSignature } from '../music/timing'
 
 /** Piccolo anticipo all'avvio, così il primo colpo non viene tagliato. */
 const START_DELAY = '+0.05'
 
-export function applyLoop(bars: number): void {
+/** La riproduzione gira sempre in loop: sul brano intero, sul pattern o sulla parte scelta. */
+export function applyLoop({ start, end }: LoopRange): void {
   const transport = Tone.getTransport()
   transport.loop = true
-  transport.loopStart = 0
-  transport.loopEnd = `${Math.max(1, bars)}m`
+  transport.setLoopPoints(`${Math.max(0, start)}m`, `${Math.max(start + 1, end)}m`)
 }
 
 export function applyTempo(bpm: number): void {

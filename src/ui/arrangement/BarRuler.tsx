@@ -3,6 +3,7 @@ import { usePlaybackStore } from '../../state/playbackStore'
 import { useProjectStore } from '../../state/projectStore'
 import { useUiStore } from '../../state/uiStore'
 import { BAR_WIDTH } from './layout'
+import { LoopBand } from './LoopBand'
 import { useRulerSeek } from './useRulerSeek'
 
 /** Numeri delle battute, fine del brano e indicatore di riproduzione (in modalità "Brano"). */
@@ -29,6 +30,7 @@ export function BarRuler({ bars, songBars }: { bars: number; songBars: number })
           {i + 1}
         </span>
       ))}
+      <LoopBand />
       {songBars > 0 && (
         <span className="ruler__end" style={{ left: songBars * BAR_WIDTH }} title={`Il brano finisce qui: ${songBars} battute`}>
           Fine

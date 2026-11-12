@@ -1,3 +1,4 @@
+import { toggleLoop } from '../../state/actions/loopActions'
 import { usePlaybackStore } from '../../state/playbackStore'
 import { useProjectStore } from '../../state/projectStore'
 import { useUiStore } from '../../state/uiStore'
@@ -8,6 +9,7 @@ import './transport.css'
 export function TransportBar() {
   const isPlaying = usePlaybackStore((s) => s.isPlaying)
   const setPlaying = usePlaybackStore((s) => s.setPlaying)
+  const loopOn = usePlaybackStore((s) => s.loopOn && s.loopRange !== null)
   const ts = useProjectStore((s) => s.project.timeSignature)
   const playMode = useUiStore((s) => s.playMode)
   const metronome = useUiStore((s) => s.metronome)
@@ -26,6 +28,15 @@ export function TransportBar() {
           Solo pattern
         </button>
       </div>
+      <button
+        className="toggle"
+        aria-pressed={loopOn && playMode === 'song'}
+        onClick={toggleLoop}
+        title="Ripete sempre la stessa parte del brano: la scegli trascinando i bordi della fascia colorata sui numeri delle battute"
+        {...noFocus}
+      >
+        🔁 Ripeti parte
+      </button>
       <BpmControl />
       <button className="toggle" aria-pressed={metronome} onClick={() => setUi({ metronome: !metronome })} title="Metronomo: un 'tic' su ogni battito per andare a tempo" {...noFocus}>
         Metronomo

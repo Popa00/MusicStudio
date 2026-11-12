@@ -21,12 +21,14 @@ export interface SequencerSource {
  */
 export function scheduleSequencer(graph: AudioGraph, source: SequencerSource, metronome: Metronome | null): () => void {
   const transport = Tone.getTransport()
-  // Il trasporto emette "start" sia al Play sia a ogni salto: il primo step dopo recupera le note in corso.
+  // Il trasporto emette "start" al Play e a ogni salto, "loop" quando ricomincia il giro:
+  // il primo step dopo recupera le note iniziate prima e ancora in corso.
   let resumed = true
   const markResumed = () => {
     resumed = true
   }
   transport.on('start', markResumed)
+  transport.on('loop', markResumed)
 
   function playStep(time: number): void {
     const project = source.project()
@@ -50,5 +52,6 @@ export function scheduleSequencer(graph: AudioGraph, source: SequencerSource, me
   return () => {
     transport.clear(id)
     transport.off('start', markResumed)
+    transport.off('loop', markResumed)
   }
 }

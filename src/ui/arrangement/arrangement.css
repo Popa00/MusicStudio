@@ -166,3 +166,32 @@
 .clip--selected {
   outline: 2px solid var(--text);
 }
+
+/* "Ripeti parte": la fascia sulla riga delle battute. Il centro lascia passare i clic (scegliere da dove ascoltare). */
+.loop-band {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  border-left: 2px solid var(--accent);
+  border-right: 2px solid var(--accent);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.loop-band__handle {
+  position: absolute;
+  top: 0;
+  width: 12px;
+  height: 100%;
+  cursor: ew-resize;
+  pointer-events: auto;
+}
+
+.loop-band__handle--start {
+  left: -7px;
+}
+
+.loop-band__handle--end {
+  right: -7px;
+}

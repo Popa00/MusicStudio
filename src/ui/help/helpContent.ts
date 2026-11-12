@@ -6,6 +6,7 @@ export const GETTING_STARTED = [
   'Suona con la tastiera del PC (tasti A S D F G H J K) per trovare le note a orecchio, poi disegnale.',
   'Vuoi effetti o volume solo per un suono della batteria (es. il charleston)? Premi ⇱ accanto al suo nome: va su una traccia "Percussione" tutta sua. Oppure crea una traccia con "+ Percussione".',
   'Usa "Solo pattern" per ascoltare in loop solo quello che stai modificando.',
+  'Vuoi riascoltare sempre la stessa parte del brano, con tutte le tracce? Premi "🔁 Ripeti parte": sui numeri delle battute compare una fascia colorata, trascinane i bordi per scegliere da dove a dove. Oppure seleziona un blocco e premi "🔁 Ripeti blocco".',
   'Quando ti piace, "Esporta WAV" crea il file audio della canzone.',
   'Hai un dubbio o ti serve un\'idea? "💬 Assistente" risponde a domande sulla musica e sul tuo brano (serve LM Studio acceso con il server locale: vedi il README).',
 ]
@@ -40,6 +41,7 @@ export const SHORTCUTS: [string, string][] = [
   ['Ritmo pronto (batteria)', 'Scegli un genere: il pattern si riempie subito con un ritmo tipico; Base o Ricco cambiano versione (Ctrl+Z per tornare indietro)'],
   ['Blocca sulla scala', "Le note disegnate, spostate (anche con le frecce) o suonate restano sulle note della scala; \"Adatta alla scala\" corregge quelle già scritte"],
   ['Clic o trascina sui numeri delle battute', 'Sceglie da dove ascoltare il brano: mentre suona salta lì, da fermo il Play parte da lì (un triangolino segna il punto)'],
+  ['Bordi della fascia colorata sulle battute', 'Con "Ripeti parte" attivo: trascinali per scegliere inizio e fine della parte che si ripete'],
   ['Esc', 'Toglie la selezione delle note'],
   ['Clic destro', 'Elimina una nota o un blocco'],
   ['Doppio clic su un cursore del mixer', 'Torna al valore iniziale'],

@@ -1,5 +1,5 @@
-import { loopLengthBars } from '../music/schedule'
-import { usePlaybackStore } from '../state/playbackStore'
+import { activeLoop } from '../music/loopRegion'
+import { activeLoopRange, usePlaybackStore } from '../state/playbackStore'
 import { useProjectStore } from '../state/projectStore'
 import { currentPlayTarget } from '../state/playTarget'
 import { useUiStore } from '../state/uiStore'
@@ -8,14 +8,15 @@ import { resetReported } from './safety'
 import { bindSeek, playbackStartStep } from './seek'
 import { applyLoop, applyTempo, applyTimeSignature, startTransport, stopTransport } from './transport'
 
-let loopBars = 0
+let loopKey = ''
 
-/** Aggiorna la lunghezza del loop solo se è cambiata (lo stato UI cambia spesso). */
+/** Aggiorna il loop solo se è cambiato (lo stato UI e quello della riproduzione cambiano spesso). */
 function refreshLoop(force = false): void {
-  const bars = loopLengthBars(useProjectStore.getState().project, currentPlayTarget())
-  if (bars === loopBars && !force) return
-  loopBars = bars
-  applyLoop(bars)
+  const loop = activeLoop(useProjectStore.getState().project, currentPlayTarget(), activeLoopRange(usePlaybackStore.getState()))
+  const key = `${loop.start}-${loop.end}`
+  if (key === loopKey && !force) return
+  loopKey = key
+  applyLoop(loop)
 }
 
 /**
@@ -40,6 +41,7 @@ export function bindStoresToEngine(graph: AudioGraph): () => void {
   const unsubscribeUi = useUiStore.subscribe(() => refreshLoop())
 
   const unsubscribePlayback = usePlaybackStore.subscribe((state, prev) => {
+    if (state.loopOn !== prev.loopOn || state.loopRange !== prev.loopRange) refreshLoop()
     if (state.isPlaying === prev.isPlaying) return
     if (state.isPlaying) {
       graph.finishSilence()

@@ -36,7 +36,7 @@ function featureList(): string {
 - Piano roll: si disegnano note di lunghezza a scelta, si selezionano, copiano e incollano; si sceglie la scala del brano e "Blocca sulla scala" tiene le note dentro la scala. Ogni nota e ogni colpo ha un'intensità (più forte o più piano).
 - Pattern: brevi pezzi (da 1 a 8 battute) che si mettono come blocchi sulla linea del tempo per costruire il brano (fino a 128 battute); si possono copiare e variare.
 - Effetti per traccia: ${effects}.
-- Mixer: volume, posizione destra/sinistra, muto, assolo. Velocità (BPM) e metronomo. Ascolto da un punto qualsiasi del brano.
+- Mixer: volume, posizione destra/sinistra, muto, assolo. Velocità (BPM) e metronomo. Ascolto da un punto qualsiasi del brano; "Ripeti parte" ascolta in loop solo alcune battute del brano.
 - Si salva su file e si esporta in WAV.
 L'APP NON HA (ancora): registrazione dal microfono, importazione di suoni propri, voce, automazioni (cambi di volume o effetti nel tempo), sidechain, arpeggiatore, swing, tastiera MIDI, esportazione MP3.`
 }

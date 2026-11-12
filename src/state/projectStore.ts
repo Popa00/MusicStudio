@@ -36,8 +36,8 @@ export const useProjectStore = create<ProjectState>()((set, get) => ({
     if (result) set({ project: result.value, history: result.history })
   },
   replace: (project) => {
-    // Un altro brano: il punto di partenza scelto in quello vecchio non ha più senso.
-    usePlaybackStore.getState().setStartStep(0)
+    // Un altro brano: il punto di partenza e la parte ripetuta scelti in quello vecchio non hanno più senso.
+    usePlaybackStore.getState().resetPosition()
     set({ project, history: emptyHistory() })
   },
 }))
