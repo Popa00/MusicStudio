@@ -6,7 +6,7 @@ import { hideDrumRow, moveDrumRowToOwnTrack } from '../../state/actions/drumRowA
 import { toggleStep } from '../../state/actions/patternActions'
 import { askConfirm, showAlert } from '../../state/browserDialogs'
 import { noFocus } from '../keepFocusOnMouseDown'
-import { VOICE_LABELS } from './voiceLabels'
+import { VOICE_LABELS } from '../../music/voiceLabels'
 
 interface StepRowProps {
   trackId: string

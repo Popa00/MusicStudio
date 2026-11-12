@@ -1,4 +1,4 @@
-import type { DrumVoiceId } from '../../music/drumPattern'
+import type { DrumVoiceId } from './drumPattern'
 
 /** Nome e breve spiegazione di ogni suono, per chi non conosce la batteria. */
 export const VOICE_LABELS: Record<DrumVoiceId, { name: string; hint: string }> = {

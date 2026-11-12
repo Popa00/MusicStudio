@@ -2,7 +2,7 @@ import type { DrumVoiceId } from '../../music/drumPattern'
 import type { DrumPatternData } from '../../project/types'
 import { setStepVelocity } from '../../state/actions/patternActions'
 import { VelocityLane } from '../velocity/VelocityLane'
-import { VOICE_LABELS } from './voiceLabels'
+import { VOICE_LABELS } from '../../music/voiceLabels'
 
 /** Le caselle della griglia: 32 px di larghezza più 4 px di spazio (vedi sequencer.css). */
 const STEP_SIZE = 32

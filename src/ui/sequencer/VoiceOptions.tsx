@@ -1,5 +1,5 @@
 import type { DrumVoiceId } from '../../music/drumPattern'
-import { VOICE_GROUPS, VOICE_LABELS } from './voiceLabels'
+import { VOICE_GROUPS, VOICE_LABELS } from '../../music/voiceLabels'
 
 /** Le voci di un menu dei suoni di batteria, divise per famiglia (casse, piatti, tom...). */
 export function VoiceOptions({ include = () => true }: { include?: (voice: DrumVoiceId) => boolean }) {

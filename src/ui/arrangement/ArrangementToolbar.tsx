@@ -5,7 +5,7 @@ import { createPercussionTrack, createTrack } from '../../state/actions/trackAct
 import { useUiStore } from '../../state/uiStore'
 import { noFocus } from '../keepFocusOnMouseDown'
 import { VoiceOptions } from '../sequencer/VoiceOptions'
-import { VOICE_LABELS } from '../sequencer/voiceLabels'
+import { VOICE_LABELS } from '../../music/voiceLabels'
 
 export function ArrangementToolbar() {
   const selectedClipId = useUiStore((s) => s.selectedClipId)

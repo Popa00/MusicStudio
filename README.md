@@ -29,6 +29,9 @@ Non serve un account, non serve internet (dopo l'installazione) e nessun dato la
 - **Esporta WAV** per ottenere il file audio della canzone.
 - **Progetti di partenza** (beat elettronico, lo-fi, progetto vuoto) e una **Guida** con primi passi, glossario e scorciatoie da tastiera.
 
+**Imparare**
+- **Assistente** (facoltativo): una chat a cui fare domande di teoria musicale o chiedere idee sul tuo brano. Vede il brano mentre lo crei, ma non lo modifica mai: spiega e consiglia, la musica la fai tu. Funziona con un modello di intelligenza artificiale che gira sul tuo PC (vedi [Assistente](#assistente-facoltativo)).
+
 ## Requisiti
 
 | Cosa | Dettagli |
@@ -58,10 +61,25 @@ npm run dev     # avvia l'app su http://127.0.0.1:5173
 
 Apri l'indirizzo nel browser e premi **Inizia**.
 
+## Assistente (facoltativo)
+
+L'assistente usa [LM Studio](https://lmstudio.ai), un programma gratuito che fa girare un modello di intelligenza artificiale sul tuo computer. Senza LM Studio l'app funziona lo stesso: solo la chat non risponde.
+
+1. Installa LM Studio e scarica un modello. Con una scheda video da 8 GB consigliamo **Gemma 4 E4B** (versione Q4_K_M); l'app lo sceglie da sola se è disponibile.
+2. Carica il modello con una **lunghezza del contesto di almeno 8192** (di solito il valore predefinito è già più alto).
+3. Avvia il server locale di LM Studio sulla porta 1234. Il modo più sicuro, valido per ogni versione, è da terminale:
+   ```bash
+   lms server start
+   ```
+   Se `lms` non viene trovato, su Windows si trova in `%USERPROFILE%\.lmstudio\bin\lms.exe`. Con `lms ps` vedi i modelli caricati e il loro contesto. Lascia disattivata l'opzione per servire il modello sulla rete locale.
+4. Avvia l'app come sempre e apri **💬 Assistente**.
+
+Le risposte sono generate da un modello piccolo e possono contenere errori. I nomi di note, accordi e scale del tuo brano invece li calcola l'app e glieli passa già pronti.
+
 ## Privacy e sicurezza
 
 - Il server di sviluppo ascolta solo su `127.0.0.1`: l'app è raggiungibile soltanto dal tuo computer, non dagli altri dispositivi della rete.
-- Non ci sono account, analisi d'uso o chiamate a servizi esterni.
+- Non ci sono account, analisi d'uso o chiamate a servizi esterni. L'assistente parla solo con LM Studio sul tuo computer, passando dall'app (`/api/llm`): il tuo brano e le tue domande non escono dal PC.
 - I progetti si salvano nel browser e nei file `.msproj` che scegli tu. Ogni file aperto viene controllato prima dell'uso: se è danneggiato o non valido viene rifiutato con un messaggio, e il progetto aperto resta com'era.
 
 ## Per sviluppatori

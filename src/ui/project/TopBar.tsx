@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { hasAutosaveBackup } from '../../io/autosave'
 import { renameProject } from '../../project/ops/song'
 import { useProjectStore } from '../../state/projectStore'
+import { useUiStore } from '../../state/uiStore'
 import { noFocus } from '../keepFocusOnMouseDown'
 import { HelpDialog } from '../help/HelpDialog'
 import { ProjectMenu } from './ProjectMenu'
@@ -13,6 +14,7 @@ export function TopBar({ autosaveFailed }: { autosaveFailed: boolean }) {
   const canRedo = useProjectStore((s) => s.history.future.length > 0)
   const { undo, redo, apply } = useProjectStore.getState()
   const [helpOpen, setHelpOpen] = useState(false)
+  const assistantOpen = useUiStore((s) => s.assistantOpen)
 
   return (
     <header className="top-bar">
@@ -31,7 +33,16 @@ export function TopBar({ autosaveFailed }: { autosaveFailed: boolean }) {
           L'ultimo salvataggio automatico non era leggibile: ne è stata conservata una copia
         </span>
       )}
-      <button className="button-small top-bar__help" onClick={() => setHelpOpen(true)} {...noFocus}>
+      <button
+        className={`button-small top-bar__help${assistantOpen ? '' : ' button-secondary'}`}
+        onClick={() => useUiStore.getState().set({ assistantOpen: !assistantOpen })}
+        title="Fai domande sulla musica e sul tuo brano"
+        aria-pressed={assistantOpen}
+        {...noFocus}
+      >
+        💬 Assistente
+      </button>
+      <button className="button-small" onClick={() => setHelpOpen(true)} {...noFocus}>
         ? Guida
       </button>
       <HelpDialog open={helpOpen} onClose={() => setHelpOpen(false)} />

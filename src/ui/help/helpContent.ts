@@ -7,6 +7,7 @@ export const GETTING_STARTED = [
   'Vuoi effetti o volume solo per un suono della batteria (es. il charleston)? Premi ⇱ accanto al suo nome: va su una traccia "Percussione" tutta sua. Oppure crea una traccia con "+ Percussione".',
   'Usa "Solo pattern" per ascoltare in loop solo quello che stai modificando.',
   'Quando ti piace, "Esporta WAV" crea il file audio della canzone.',
+  'Hai un dubbio o ti serve un\'idea? "💬 Assistente" risponde a domande sulla musica e sul tuo brano (serve LM Studio acceso con il server locale: vedi il README).',
 ]
 
 export const GLOSSARY: [string, string][] = [

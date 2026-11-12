@@ -7,7 +7,7 @@ import { Slider } from '../controls/Slider'
 import { PERCENT, SEMITONES } from '../controls/valueUnits'
 import { noFocus } from '../keepFocusOnMouseDown'
 import { VoiceOptions } from '../sequencer/VoiceOptions'
-import { VOICE_LABELS } from '../sequencer/voiceLabels'
+import { VOICE_LABELS } from '../../music/voiceLabels'
 import '../synth/synth.css'
 
 /** Suono di una traccia "percussione": quale suono, quanto acuto, quanto lungo. */

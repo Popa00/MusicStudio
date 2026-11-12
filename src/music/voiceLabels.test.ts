@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { DRUM_VOICES } from '../../music/drumPattern'
+import { DRUM_VOICES } from './drumPattern'
 import { VOICE_GROUPS, VOICE_LABELS } from './voiceLabels'
 
 describe('voiceLabels', () => {

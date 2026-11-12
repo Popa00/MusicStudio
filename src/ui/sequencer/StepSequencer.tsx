@@ -10,7 +10,7 @@ import { AddDrumVoice } from './AddDrumVoice'
 import { DrumVelocityLane } from './DrumVelocityLane'
 import { RhythmPicker } from './RhythmPicker'
 import { StepRow } from './StepRow'
-import { VOICE_GROUPS } from './voiceLabels'
+import { VOICE_GROUPS } from '../../music/voiceLabels'
 import './sequencer.css'
 
 /** Griglia della batteria: ogni riga è un suono, ogni casella un sedicesimo di battuta. */

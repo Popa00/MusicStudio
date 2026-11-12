@@ -33,6 +33,8 @@ interface UiState {
   scaleLock: boolean
   /** Percussioni in più mostrate nella griglia di ogni traccia batteria (oltre a quelle con colpi). */
   drumRows: Record<string, DrumVoiceId[]>
+  /** Pannello dell'assistente aperto. */
+  assistantOpen: boolean
   set: (changes: Partial<Omit<UiState, 'set'>>) => void
 }
 
@@ -49,5 +51,6 @@ export const useUiStore = create<UiState>()((set) => ({
   noteLength: 4,
   scaleLock: true,
   drumRows: {},
+  assistantOpen: false,
   set: (changes) => set(changes),
 }))
