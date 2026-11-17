@@ -25,6 +25,7 @@ Non serve un account, non serve internet (dopo l'installazione) e nessun dato la
 
 **Lavorare comodi**
 - Annulla e ripeti, copia e incolla, selezione di più note, metronomo e modalità "Solo pattern" per ascoltare in loop solo quello che stai modificando.
+- **Ripeti parte**: ascolta in loop sempre le stesse battute del brano, con tutte le tracce. Trascini i bordi della fascia colorata sui numeri delle battute per scegliere da dove a dove, oppure selezioni un blocco e premi **Ripeti blocco**.
 - **Salvataggio automatico** nel browser, più **Salva/Apri** su file `.msproj` per conservare i progetti.
 - **Esporta WAV** per ottenere il file audio della canzone.
 - **Progetti di partenza** (beat elettronico, lo-fi, progetto vuoto) e una **Guida** con primi passi, glossario e scorciatoie da tastiera.
@@ -76,6 +77,8 @@ L'assistente usa [LM Studio](https://lmstudio.ai), un programma gratuito che fa 
 
 Le risposte sono generate da un modello piccolo e possono contenere errori. I nomi di note, accordi e scale del tuo brano invece li calcola l'app e glieli passa già pronti.
 
+L'assistente parla solo di musica e di come usare l'app: alle domande su altri argomenti risponde che non può aiutare. Non mostra le sue istruzioni interne, e l'app blocca le risposte che provano a ricopiarle. Se il pannello della chat ha un problema, il resto dell'app continua a funzionare.
+
 ## Privacy e sicurezza
 
 - Il server di sviluppo ascolta solo su `127.0.0.1`: l'app è raggiungibile soltanto dal tuo computer, non dagli altri dispositivi della rete.
@@ -92,6 +95,8 @@ npm run typecheck    # controllo dei tipi
 npm run lint         # controllo dello stile del codice
 npm run build        # versione di produzione in dist/
 npm run audio:check  # misura il suono e crea spettrogrammi (vedi tools/audio-check/README.md)
+npm run knowledge:build  # ricostruisce la biblioteca dell'assistente (serve LM Studio, vedi knowledge/README.md)
+npm run knowledge:eval   # misura quanto bene l'assistente trova le schede giuste
 ```
 
 Organizzazione del codice:
@@ -102,9 +107,12 @@ Organizzazione del codice:
 | `src/music/` | Logica musicale pura: tempi, scale, note, cosa suonare a ogni step |
 | `src/state/` | Stato dell'app (con annulla/ripeti) e azioni |
 | `src/audio/` | Motore audio: strumenti, batteria, effetti, mixer, export WAV |
+| `src/assistant/` | Assistente: riassunto del brano, regole, protezioni, collegamento a LM Studio |
 | `src/io/` | Salvataggio automatico, file di progetto, download |
 | `src/ui/` | Interfaccia React, divisa per area |
 | `tools/audio-check/` | Controllo oggettivo della qualità del suono |
+| `knowledge/` | Biblioteca dell'assistente: schede di teoria musicale in italiano (licenza CC BY-SA 4.0) |
+| `tools/knowledge/` | Costruzione e misura della biblioteca |
 | `docs/research/` | Note di ricerca su funzionalità e concetti musicali |
 
 ## Crediti dei suoni
@@ -120,3 +128,4 @@ Ogni cartella contiene un `LICENSE.txt` con il file originale da cui viene ogni 
 
 Per ora il codice di questo progetto non ha una licenza open source. Puoi guardarlo e provarlo, ma per riutilizzarne delle parti contatta l'autore.
 I suoni in `public/samples/` restano CC0 e le librerie usate mantengono le loro licenze (MIT e 0BSD).
+La biblioteca dell'assistente (`knowledge/` e `public/knowledge/`) è distribuita con licenza CC BY-SA 4.0: vedi `knowledge/README.md`.

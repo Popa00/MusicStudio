@@ -1,0 +1,7 @@
+index.json contiene i testi della biblioteca dell'assistente di Music Studio (knowledge/cards/)
+con i relativi vettori di ricerca. È distribuito con licenza Creative Commons
+Attribuzione - Condividi allo stesso modo 4.0 Internazionale (CC BY-SA 4.0):
+https://creativecommons.org/licenses/by-sa/4.0/deed.it
+
+Le schede riassumono pagine di Wikipedia (contributori vari, CC BY-SA 4.0); ogni scheda
+elenca le pagine usate nel campo "sources". Crediti completi: knowledge/README.md.
