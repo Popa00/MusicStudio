@@ -34,6 +34,10 @@ describe('projectSummary: casi particolari', () => {
     const electronic = TEMPLATES.find((t) => t.id === 'electronic')!.create()
     expect(projectSummary(electronic, NO_FOCUS)).toContain('Accordi della scala (stanno bene insieme in questo brano): Lam Sidim Do Rem Mim Fa Sol.')
   })
+  it('raggruppa gli accordi della scala per tipo (in La minore il Fa è maggiore)', () => {
+    const electronic = TEMPLATES.find((t) => t.id === 'electronic')!.create()
+    expect(projectSummary(electronic, NO_FOCUS)).toContain('Gli stessi accordi per tipo: minori: Lam Rem Mim · diminuiti: Sidim · maggiori: Do Fa Sol.')
+  })
   it('senza scala non scrive gli accordi della scala', () => {
     const project = { ...createEmptyProject(), scale: { root: 0, type: 'none' as const } }
     const summary = projectSummary(project, NO_FOCUS)

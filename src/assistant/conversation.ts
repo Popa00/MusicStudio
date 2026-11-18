@@ -1,3 +1,4 @@
+import { splitCitations } from './knowledge/citations'
 import type { ChatMessage } from './provider/types'
 
 /** Spazio per i messaggi precedenti, in caratteri (~1000 token): le domande vecchie escono per prime. */
@@ -47,9 +48,15 @@ export function buildMessages(system: string, history: readonly ChatMessage[], m
 }
 
 /**
- * Toglie dalla risposta il "ragionamento" che alcuni modelli scrivono tra <think> e </think>:
- * all'utente serve solo la risposta. Un blocco non ancora chiuso (risposta in arrivo) viene nascosto.
+ * Toglie dalla risposta il "ragionamento" che alcuni modelli scrivono tra <think> e </think>
+ * (un blocco non ancora chiuso, cioè risposta in arrivo, viene nascosto) e la riga finale "FONTI: …"
+ * con cui il modello indica le schede usate: all'utente serve solo la risposta.
  */
 export function visibleAnswer(text: string): string {
-  return text.replace(/<think>[\s\S]*?(<\/think>|$)/g, '').trimStart()
+  return splitCitations(withoutThinking(text)).text.trimStart()
+}
+
+/** La risposta senza il "ragionamento" tra <think> e </think> (anche se il blocco non è ancora chiuso). */
+export function withoutThinking(text: string): string {
+  return text.replace(/<think>[\s\S]*?(<\/think>|$)/g, '')
 }

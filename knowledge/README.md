@@ -1,6 +1,6 @@
 # Biblioteca dell'assistente
 
-Le schede in `cards/` sono la conoscenza musicale da cui l'assistente di Music Studio prende le informazioni per rispondere. Sono testi brevi in italiano, uno per concetto, scritti per chi non è musicista.
+Le schede in `cards/` sono la conoscenza musicale da cui l'assistente di Music Studio prende le informazioni per rispondere. Sono testi in italiano, uno per concetto, scritti per chi non è musicista: una spiegazione semplice con un esempio, poi sotto-sezioni su esempi, errori comuni e come farlo nell'app.
 
 ## Formato di una scheda
 
@@ -25,6 +25,7 @@ Una sotto-sezione…
 Dopo ogni modifica:
 
 ```bash
+npm run knowledge:check   # controlla formato, fonti e lunghezze (non serve LM Studio)
 npm run knowledge:build   # ricostruisce public/knowledge/index.json (serve LM Studio con bge-m3)
 npm run knowledge:eval    # misura quanto bene la ricerca trova le schede giuste
 ```
@@ -38,6 +39,12 @@ La licenza vale solo per questa biblioteca: il codice dell'app non è coperto (v
 
 ## Crediti
 
-Le schede sono scritte per Music Studio, riassumendo e semplificando le pagine indicate in `fonti:` di ogni scheda. Per ora l'unica fonte è **Wikipedia** (contributori vari, CC BY-SA 4.0): ogni scheda cita le voci usate, con il link. Quando si aggiungeranno testi da altre fonti (per esempio Open Music Theory), vanno elencati qui con autori, link e licenza.
+Le schede sono scritte per Music Studio, riassumendo e semplificando con parole nuove le pagine indicate in `fonti:` di ogni scheda (ogni scheda cita le pagine usate, con il link). Le fonti, tutte con licenza CC BY-SA 4.0:
 
-Il controllo dei fatti è riportato in `docs/research/verifica-schede.md`. Le schede semplificano, ma non devono dire cose false: se trovi un errore, correggilo e ricostruisci l'indice.
+- **Wikipedia** in inglese e in italiano (contributori vari): <https://en.wikipedia.org>, <https://it.wikipedia.org>.
+- **Wikibooks** in inglese (contributori vari): <https://en.wikibooks.org>.
+- **Open Music Theory, 2ª edizione**, di Mark Gotham, Kyle Gullings, Chelsey Hamm, Bryn Hughes, Brian Jarvis, Megan Lavengood e John Peterson, nella copia di LibreTexts: <https://human.libretexts.org/Bookshelves/Music/Music_Theory/Open_Music_Theory_2e_(Gotham_et_al.)>.
+
+Se si aggiungono testi da altre fonti, vanno elencati qui con autori, link e licenza (solo licenze compatibili: niente NC, ND o GFDL).
+
+Il controllo dei fatti è riportato in `docs/research/verifica-schede-v2-*.md` (schede attuali, con le correzioni già applicate) e, per la prima versione corta, in `docs/research/verifica-schede.md`. Le schede semplificano, ma non devono dire cose false: se trovi un errore, correggilo e ricostruisci l'indice.

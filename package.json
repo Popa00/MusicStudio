@@ -12,6 +12,7 @@
     "typecheck": "tsc -b",
     "audio:check": "node tools/audio-check/run.mjs",
     "knowledge:build": "node tools/knowledge/build.ts",
+    "knowledge:check": "node tools/knowledge/check.ts",
     "knowledge:eval": "node tools/knowledge/eval.ts"
   },
   "dependencies": {

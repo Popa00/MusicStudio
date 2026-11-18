@@ -1,9 +1,9 @@
-import { knowledgeIndexSchema, type KnowledgeChunk, type KnowledgeSource } from './schema'
+import { KNOWLEDGE_LIMITS, knowledgeIndexSchema, type KnowledgeChunk, type KnowledgeSource } from './schema'
 import { createSearch, DEFAULT_SEARCH, type SearchOptions } from './search'
 import { decodeVector, dot } from './vectors'
 
-/** L'indice è di circa 0,6 MB: oltre questo limite non viene nemmeno letto. */
-export const MAX_INDEX_BYTES = 5_000_000
+/** Oltre questa dimensione l'indice non viene nemmeno letto (`knowledge:build` avvisa prima di arrivarci). */
+export const MAX_INDEX_BYTES = KNOWLEDGE_LIMITS.indexBytes
 
 /** Una scheda intera, ricomposta dai suoi pezzi: è quella che si passa al modello. */
 export interface LibraryCard {

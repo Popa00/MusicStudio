@@ -1,6 +1,6 @@
-import { buildMessages, completedTurns, QUESTION_MAX_CHARS, visibleAnswer } from '../../assistant/conversation'
+import { buildMessages, completedTurns, QUESTION_MAX_CHARS, visibleAnswer, withoutThinking } from '../../assistant/conversation'
 import { assistantRetriever } from '../../assistant/knowledge/defaultRetriever'
-import { librarySection, sourcesOf } from '../../assistant/knowledge/libraryPrompt'
+import { answerSources, librarySection } from '../../assistant/knowledge/libraryPrompt'
 import type { FoundCard, Retriever } from '../../assistant/knowledge/retrieve'
 import { BLOCKED_ANSWER, leaksInstructions } from '../../assistant/guard'
 import { systemPrompt } from '../../assistant/prompt'
@@ -55,7 +55,6 @@ export async function askAssistant(
     const cards = await retrieve(text, previousQuestion(turns), signal)
     // Fermata mentre cercava nella biblioteca: la domanda non parte nemmeno.
     if (signal.aborted) return
-    const sources = sourcesOf(cards.filter((c) => c.cited))
     for await (const piece of provider.stream(buildMessages(currentSystemPrompt(cards), history), signal)) {
       content += piece
       // Se il modello sta ricopiando le istruzioni riservate, la risposta si ferma e viene sostituita.
@@ -63,6 +62,8 @@ export async function askAssistant(
         updateMessage(answer.id, (m) => ({ ...m, content: BLOCKED_ANSWER, sources: undefined }))
         break
       }
+      // Le fonti dipendono dalla riga "FONTI: …" che il modello scrive alla fine: si ricalcolano a ogni pezzo.
+      const sources = answerSources(cards, withoutThinking(content))
       updateMessage(answer.id, (m) => ({ ...m, content, sources: sources.length ? sources : undefined }))
       const model = provider.modelName()
       if (useAssistantStore.getState().model !== model) useAssistantStore.getState().set({ model })

@@ -22,7 +22,13 @@ non è stata confermata (verificare con `npm view tone version`).
 | [10-prossime-funzionalita.md](10-prossime-funzionalita.md) | prossime funzionalità per chi non sa musica (scala bloccata, accordi e progressioni, pattern per genere, arpeggiatore, dado, sezioni), suoni più ricchi (chorus, LFO, sidechain), UX; top 8 ordinata |
 | [11-percussioni.md](11-percussioni.md) | percussioni extra per 8 generi (808 lungo, rimshot, shaker, tom, tamburello, cowbell, conga, piatti): ricette di sintesi Tone.js, cosa richiede campioni, ordine consigliato, impatto su UI sequencer e formato progetto |
 | [rag-fonti.md](rag-fonti.md) | biblioteca dell'assistente: fonti a licenza libera (e quelle escluse), modelli di embedding multilingue, ricerca combinata, licenze e crediti |
-| [verifica-schede.md](verifica-schede.md) | controllo dei fatti e delle fonti delle 90 schede in `knowledge/cards/` |
+| [verifica-schede.md](verifica-schede.md) | controllo dei fatti e delle fonti delle prime 90 schede (versione corta) in `knowledge/cards/` |
+| [approfondimenti-basi-armonia-melodia.md](approfondimenti-basi-armonia-melodia.md) | ricerca per ampliare le schede di basi, armonia e melodia |
+| [approfondimenti-ritmo-forma-generi.md](approfondimenti-ritmo-forma-generi.md) | ricerca per ampliare le schede di ritmo, forma e generi |
+| [approfondimenti-suono-effetti-mix.md](approfondimenti-suono-effetti-mix.md) | ricerca per ampliare le schede di suono, effetti e mix |
+| [verifica-schede-v2-basi-armonia-melodia.md](verifica-schede-v2-basi-armonia-melodia.md) | verifica delle schede ampliate di basi, armonia e melodia |
+| [verifica-schede-v2-ritmo-forma-generi.md](verifica-schede-v2-ritmo-forma-generi.md) | verifica delle schede ampliate di ritmo, forma e generi |
+| [verifica-schede-v2-suono-effetti-mix.md](verifica-schede-v2-suono-effetti-mix.md) | verifica delle schede ampliate di suono, effetti e mix |
 
 ## Mini-glossario
 

@@ -13,6 +13,8 @@ export const KNOWLEDGE_LIMITS = {
   keywords: 40,
   sources: 8,
   dims: 2048,
+  /** Dimensione massima del file dell'indice: l'app non legge oltre (con 1024 dimensioni ~6,7 KB per pezzo). */
+  indexBytes: 5_000_000,
 } as const
 
 /** Una fonte: solo dai siti ammessi (`sources.ts`), e con la licenza che corrisponde a quel sito. */

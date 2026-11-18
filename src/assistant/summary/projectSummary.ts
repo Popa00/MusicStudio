@@ -1,3 +1,4 @@
+import type { Chord } from '../../music/chords'
 import { scaleChords, scaleName, scaleNoteNames } from '../../music/scaleChords'
 import { barSeconds } from '../../music/timing'
 import { songLengthBars } from '../../project/ops/clips'
@@ -22,8 +23,22 @@ function scaleLines(project: Project): string[] {
   if (type === 'none') return ['Scala: nessuna scelta (tutte le note sono permesse).']
   const lines = [`Scala: ${scaleName(root, type)}; le sue note: ${scaleNoteNames(root, type).join(' ')}.`]
   const chords = scaleChords(root, type)
-  if (chords.length > 0) lines.push(`Accordi della scala (stanno bene insieme in questo brano): ${chords.map((c) => c.name).join(' ')}.`)
+  if (chords.length > 0) {
+    lines.push(`Accordi della scala (stanno bene insieme in questo brano): ${chords.map((c) => c.name).join(' ')}.`)
+    lines.push(`Gli stessi accordi per tipo: ${chordsByQuality(chords)}.`)
+  }
   return lines
+}
+
+/**
+ * Es. "minori: Lam Rem Mim · maggiori: Do Fa Sol · diminuiti: Sidim". Scritto dall'app perché un modello
+ * piccolo, a memoria, a volte sbaglia il tipo (per esempio chiama minore il Fa di La minore).
+ */
+function chordsByQuality(chords: readonly Chord[]): string {
+  const groups = new Map<string, string[]>()
+  for (const chord of chords) groups.set(chord.quality, [...(groups.get(chord.quality) ?? []), chord.name])
+  const plural = (quality: string) => quality.replace(/o$/, 'i').replace(/e$/, 'i')
+  return [...groups].map(([quality, names]) => `${plural(quality)}: ${names.join(' ')}`).join(' · ')
 }
 
 export const SUMMARY_TITLE = "PROGETTO ATTUALE DELL'UTENTE (descritto dall'app: nomi di note e accordi sono esatti)"

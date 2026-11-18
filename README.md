@@ -82,7 +82,7 @@ L'assistente usa [LM Studio](https://lmstudio.ai), un programma gratuito che fa 
 
 Le risposte sono generate da un modello piccolo e possono contenere errori. I nomi di note, accordi e scale del tuo brano invece li calcola l'app e glieli passa già pronti.
 
-**Come usa la biblioteca.** A ogni domanda l'app cerca le 3 schede più adatte (per parole chiave e, con bge-m3, per significato, tenendo conto anche della domanda precedente) e le passa al modello insieme alla domanda: così il modello spiega partendo da testi controllati invece che "a memoria". Sotto la risposta compare **Fonti consultate**, con i link alle pagine originali (si aprono in una nuova scheda). La biblioteca si scarica dall'app solo alla prima domanda e viene controllata prima dell'uso; se manca o non è valida, l'assistente risponde comunque, senza schede.
+**Come usa la biblioteca.** A ogni domanda l'app cerca le 3 schede più adatte (per parole chiave e, con bge-m3, per significato, tenendo conto anche della domanda precedente) e le passa al modello insieme alla domanda: così il modello spiega partendo da testi controllati invece che "a memoria". La biblioteca ha oltre 110 schede di teoria e produzione (armonia, melodia, ritmo, forma, generi, suono, effetti, mix), ognuna con spiegazione, esempi, errori comuni e consigli su come farlo nell'app, controllate sulle fonti. Sotto la risposta compare **Fonti consultate**, con i link alle pagine originali delle schede che il modello dice di aver usato (si aprono in una nuova scheda); a una domanda fuori tema non compare nessuna fonte. La biblioteca si scarica dall'app solo alla prima domanda e viene controllata prima dell'uso; se manca o non è valida, l'assistente risponde comunque, senza schede.
 
 L'assistente parla solo di musica e di come usare l'app: alle domande su altri argomenti risponde che non può aiutare. Non mostra le sue istruzioni interne, e l'app blocca le risposte che provano a ricopiarle. Se il pannello della chat ha un problema, il resto dell'app continua a funzionare.
 
@@ -102,6 +102,7 @@ npm run typecheck    # controllo dei tipi
 npm run lint         # controllo dello stile del codice
 npm run build        # versione di produzione in dist/
 npm run audio:check  # misura il suono e crea spettrogrammi (vedi tools/audio-check/README.md)
+npm run knowledge:check  # controlla le schede della biblioteca (formato, fonti, lunghezze), senza LM Studio
 npm run knowledge:build  # ricostruisce la biblioteca dell'assistente (serve LM Studio, vedi knowledge/README.md)
 npm run knowledge:eval   # misura quanto bene l'assistente trova le schede giuste
 ```
