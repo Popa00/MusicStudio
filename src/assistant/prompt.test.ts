@@ -20,4 +20,12 @@ describe('prompt: regole dell\'assistente', () => {
     expect(prompt).toContain('Ripeti parte')
     expect(prompt.endsWith('RIASSUNTO-X')).toBe(true)
   })
+  it('con la biblioteca, la sezione va in fondo dopo il riassunto', () => {
+    const prompt = systemPrompt('RIASSUNTO-X', 'BIBLIOTECA-Y')
+    expect(prompt.endsWith('RIASSUNTO-X\n\nBIBLIOTECA-Y')).toBe(true)
+  })
+  it('le regole citano la BIBLIOTECA e vietano di scrivere link', () => {
+    expect(RULES).toContain('BIBLIOTECA')
+    expect(RULES).toContain('Non scrivere link')
+  })
 })

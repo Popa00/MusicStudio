@@ -10,7 +10,8 @@ import { dirname, resolve } from 'node:path'
 import { knowledgeIndexSchema, type KnowledgeIndex } from '../../src/assistant/knowledge/schema.ts'
 import { encodeVector } from '../../src/assistant/knowledge/vectors.ts'
 import { loadCards } from './cards.ts'
-import { cardEmbeddingText, DEFAULT_MODEL, embed } from './embed.ts'
+import { chunkEmbeddingText, splitCard } from './chunks.ts'
+import { DEFAULT_MODEL, embed } from './embed.ts'
 
 const ROOT = resolve(import.meta.dirname, '../..')
 const CARDS_DIR = resolve(ROOT, 'knowledge/cards')
@@ -25,18 +26,19 @@ function argument(name: string): string | undefined {
 async function main(): Promise<void> {
   const model = argument('model') ?? DEFAULT_MODEL
   const cards = loadCards(CARDS_DIR)
-  console.log(`${cards.length} schede. Calcolo gli embedding con ${model}…`)
-  const vectors = await embed(cards.map(cardEmbeddingText), model, 'document')
+  const pieces = cards.flatMap((card) => splitCard(card.text).map((chunk) => ({ card, chunk })))
+  console.log(`${cards.length} schede, ${pieces.length} pezzi. Calcolo gli embedding con ${model}…`)
+  const vectors = await embed(pieces.map((p) => chunkEmbeddingText(p.card, p.chunk)), model, 'document')
   const index: KnowledgeIndex = {
     version: 1,
     model,
     dims: vectors[0]?.length ?? 8,
     license: LICENSE,
-    chunks: cards.map((card, i) => ({
+    chunks: pieces.map(({ card, chunk }, i) => ({
       card: card.id,
       area: card.area,
       title: card.title,
-      text: card.text,
+      text: chunk.text,
       keywords: card.keywords,
       sources: card.sources,
       vector: encodeVector(vectors[i]),

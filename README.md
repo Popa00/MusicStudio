@@ -31,7 +31,7 @@ Non serve un account, non serve internet (dopo l'installazione) e nessun dato la
 - **Progetti di partenza** (beat elettronico, lo-fi, progetto vuoto) e una **Guida** con primi passi, glossario e scorciatoie da tastiera.
 
 **Imparare**
-- **Assistente** (facoltativo): una chat a cui fare domande di teoria musicale o chiedere idee sul tuo brano. Vede il brano mentre lo crei, ma non lo modifica mai: spiega e consiglia, la musica la fai tu. Funziona con un modello di intelligenza artificiale che gira sul tuo PC (vedi [Assistente](#assistente-facoltativo)).
+- **Assistente** (facoltativo): una chat a cui fare domande di teoria musicale o chiedere idee sul tuo brano. Vede il brano mentre lo crei, ma non lo modifica mai: spiega e consiglia, la musica la fai tu. Prima di rispondere consulta una **biblioteca** di 90 schede di teoria verificate e sotto la risposta mostra le **fonti** (pagine di Wikipedia) da cui sono state ricavate. Funziona con un modello di intelligenza artificiale che gira sul tuo PC (vedi [Assistente](#assistente-facoltativo)).
 
 ## Requisiti
 
@@ -66,16 +66,23 @@ Apri l'indirizzo nel browser e premi **Inizia**.
 
 L'assistente usa [LM Studio](https://lmstudio.ai), un programma gratuito che fa girare un modello di intelligenza artificiale sul tuo computer. Senza LM Studio l'app funziona lo stesso: solo la chat non risponde.
 
-1. Installa LM Studio e scarica un modello. Con una scheda video da 8 GB consigliamo **Gemma 4 E4B** (versione Q4_K_M); l'app lo sceglie da sola se è disponibile.
-2. Carica il modello con una **lunghezza del contesto di almeno 8192** (di solito il valore predefinito è già più alto).
-3. Avvia il server locale di LM Studio sulla porta 1234. Il modo più sicuro, valido per ogni versione, è da terminale:
+1. Installa LM Studio e scarica **Gemma 4 E4B** (versione Q4_K_M), consigliato con una scheda video da 8 GB: l'app lo sceglie da sola se è disponibile.
+2. Consigliato: scarica anche **bge-m3** (`gpustack/bge-m3-GGUF`, versione Q8_0, circa 600 MB). È un piccolo modello che serve all'assistente per cercare nella biblioteca le schede giuste "per significato", anche quando usi parole diverse da quelle delle schede. Senza bge-m3 l'assistente cerca solo per parole chiave: funziona, ma trova un po' meno.
+3. Avvia il server locale di LM Studio sulla porta 1234 e carica i due modelli. Il modo più sicuro, valido per ogni versione, è da terminale:
    ```bash
    lms server start
+   lms load google/gemma-4-e4b --context-length 16384 --gpu max
+   lms load text-embedding-bge-m3
    ```
    Se `lms` non viene trovato, su Windows si trova in `%USERPROFILE%\.lmstudio\bin\lms.exe`. Con `lms ps` vedi i modelli caricati e il loro contesto. Lascia disattivata l'opzione per servire il modello sulla rete locale.
-4. Avvia l'app come sempre e apri **💬 Assistente**.
+4. **Per risposte veloci** (10–20 secondi invece di 2 minuti):
+   - usa una **lunghezza del contesto di 16384**. Il valore proposto da LM Studio (oltre 100 000) non entra nella memoria di una scheda video da 8 GB e rallenta tutto di circa 4 volte; 16384 basta e avanza per la chat;
+   - **carica entrambi i modelli** come sopra. Se li lasci caricare "al volo" da LM Studio, ne tiene in memoria uno alla volta e a ogni domanda li scambia, ricaricando Gemma ogni volta.
+5. Avvia l'app come sempre e apri **💬 Assistente**.
 
 Le risposte sono generate da un modello piccolo e possono contenere errori. I nomi di note, accordi e scale del tuo brano invece li calcola l'app e glieli passa già pronti.
+
+**Come usa la biblioteca.** A ogni domanda l'app cerca le 3 schede più adatte (per parole chiave e, con bge-m3, per significato, tenendo conto anche della domanda precedente) e le passa al modello insieme alla domanda: così il modello spiega partendo da testi controllati invece che "a memoria". Sotto la risposta compare **Fonti consultate**, con i link alle pagine originali (si aprono in una nuova scheda). La biblioteca si scarica dall'app solo alla prima domanda e viene controllata prima dell'uso; se manca o non è valida, l'assistente risponde comunque, senza schede.
 
 L'assistente parla solo di musica e di come usare l'app: alle domande su altri argomenti risponde che non può aiutare. Non mostra le sue istruzioni interne, e l'app blocca le risposte che provano a ricopiarle. Se il pannello della chat ha un problema, il resto dell'app continua a funzionare.
 
@@ -107,7 +114,7 @@ Organizzazione del codice:
 | `src/music/` | Logica musicale pura: tempi, scale, note, cosa suonare a ogni step |
 | `src/state/` | Stato dell'app (con annulla/ripeti) e azioni |
 | `src/audio/` | Motore audio: strumenti, batteria, effetti, mixer, export WAV |
-| `src/assistant/` | Assistente: riassunto del brano, regole, protezioni, collegamento a LM Studio |
+| `src/assistant/` | Assistente: riassunto del brano, regole, protezioni, collegamento a LM Studio, ricerca nella biblioteca (`knowledge/`) |
 | `src/io/` | Salvataggio automatico, file di progetto, download |
 | `src/ui/` | Interfaccia React, divisa per area |
 | `tools/audio-check/` | Controllo oggettivo della qualità del suono |

@@ -12,11 +12,15 @@ parole: riverbero, reverb, stanza, sala, spazio
 fonti: Reverberation (Wikipedia) <https://en.wikipedia.org/wiki/Reverberation>
 
 Testo della scheda…
+
+### Errori comuni
+Una sotto-sezione…
 ```
 
 - `riverbero` è l'identificativo (minuscole, numeri e trattini), poi c'è il titolo.
 - `parole`: parole chiave separate da virgole, comprese le espressioni che userebbe un principiante (per esempio "il suono gracchia").
 - `fonti`: le pagine da cui vengono le informazioni, nel formato `Titolo <https://…>`, separate da `;`. Sono ammessi solo siti con licenza compatibile: Wikipedia, Wikibooks, Open Music Theory.
+- Sotto-sezioni (`### Titolo`, facoltative): una scheda lunga (fino a ~2500 caratteri) si divide in sotto-sezioni, ognuna su un aspetto (come si usa, errori comuni, esempi…). Ogni sotto-sezione diventa un "pezzo" con il suo vettore, così una domanda precisa trova la parte giusta; all'assistente arriva poi la scheda intera. Le sotto-sezioni più corte di 200 caratteri si uniscono a quella prima.
 
 Dopo ogni modifica:
 

@@ -37,10 +37,3 @@ export async function embed(texts: string[], model: string, kind: 'query' | 'doc
   }
   return out
 }
-
-/**
- * Il testo di una scheda da trasformare in vettore: titolo, parole chiave (scritte anche come le direbbe
- * un principiante, così una domanda "di tutti i giorni" trova la scheda tecnica giusta) e testo.
- */
-export const cardEmbeddingText = (card: { title: string; keywords: readonly string[]; text: string }) =>
-  `${card.title}\n${card.keywords.join(', ')}\n${card.text}`

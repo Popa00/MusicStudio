@@ -3,6 +3,7 @@ import { visibleAnswer } from '../../assistant/conversation'
 import { askAssistant } from '../../state/actions/assistantActions'
 import { useAssistantStore, type AssistantMessage } from '../../state/assistantStore'
 import { noFocus } from '../keepFocusOnMouseDown'
+import { MessageSources } from './MessageSources'
 import { MessageText } from './MessageText'
 
 const SUGGESTIONS = [
@@ -15,7 +16,13 @@ function Message({ message, answering }: { message: AssistantMessage; answering:
   const className = `assistant__msg assistant__msg--${message.role}${message.error ? ' assistant__msg--error' : ''}`
   if (message.role === 'user') return <div className={className}>{message.content}</div>
   const text = visibleAnswer(message.content)
-  return <div className={className}>{text ? <MessageText text={text} /> : <p className="assistant__wait">{answering ? 'Sto pensando…' : '(nessuna risposta)'}</p>}</div>
+  return (
+    <div className={className}>
+      {text ? <MessageText text={text} /> : <p className="assistant__wait">{answering ? 'Sto pensando…' : '(nessuna risposta)'}</p>}
+      {/* Le fonti compaiono a risposta finita, così non saltano mentre il testo arriva. */}
+      {text && !answering && message.sources && <MessageSources sources={message.sources} />}
+    </div>
+  )
 }
 
 /** I messaggi della chat; si scorre da sola verso il basso, a meno che tu non stia rileggendo più su. */

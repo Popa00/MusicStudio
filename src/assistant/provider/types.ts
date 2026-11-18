@@ -15,6 +15,12 @@ export interface ChatProvider {
   modelName(): string | null
 }
 
+/** Chi trasforma i testi in vettori (embedding) per cercare nella biblioteca per significato. */
+export interface EmbeddingProvider {
+  /** Un vettore normalizzato per ogni testo, nello stesso ordine, calcolato con il modello indicato. */
+  embed(texts: string[], model: string, signal: AbortSignal): Promise<Float32Array[]>
+}
+
 /** Errore con un messaggio già pronto da mostrare all'utente. */
 export class AssistantError extends Error {
   constructor(message: string) {

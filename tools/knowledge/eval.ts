@@ -11,7 +11,8 @@ import { resolve } from 'node:path'
 import { z } from 'zod'
 import { createSearch, DEFAULT_SEARCH, type SearchDoc } from '../../src/assistant/knowledge/search.ts'
 import { loadCards } from './cards.ts'
-import { cardEmbeddingText, DEFAULT_MODEL, embed } from './embed.ts'
+import { chunkEmbeddingText, splitCard } from './chunks.ts'
+import { DEFAULT_MODEL, embed } from './embed.ts'
 
 const ROOT = resolve(import.meta.dirname, '../..')
 const questionsSchema = z.array(z.object({ q: z.string().min(3), expect: z.array(z.string()).min(1) }))
@@ -29,14 +30,15 @@ async function evaluate(model: string, file: string): Promise<void> {
   const ids = new Set(cards.map((c) => c.id))
   for (const q of questions) for (const id of q.expect) if (!ids.has(id)) throw new Error(`Domanda "${q.q}": scheda inesistente ${id}`)
 
-  const vectors = await embed(cards.map(cardEmbeddingText), model, 'document')
+  const pieces = cards.flatMap((card) => splitCard(card.text).map((chunk) => ({ card, chunk })))
+  const vectors = await embed(pieces.map((p) => chunkEmbeddingText(p.card, p.chunk)), model, 'document')
   const queryVectors = await embed(questions.map((q) => q.q), model, 'query')
-  const docs: SearchDoc[] = cards.map((c, i) => ({ ...c, card: c.id, vector: vectors[i] }))
+  const docs: SearchDoc[] = pieces.map(({ card, chunk }, i) => ({ ...card, text: chunk.text, card: card.id, vector: vectors[i] }))
   const search = createSearch(docs)
   const modes: Mode[] = ['parole', 'significato', 'insieme']
   const misses: string[] = []
 
-  console.log(`\n${model} — ${file} (${cards.length} schede, ${questions.length} domande)`)
+  console.log(`\n${model} — ${file} (${cards.length} schede, ${pieces.length} pezzi, ${questions.length} domande)`)
   for (const mode of modes) {
     let top1 = 0
     let top3 = 0

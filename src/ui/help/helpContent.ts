@@ -8,7 +8,7 @@ export const GETTING_STARTED = [
   'Usa "Solo pattern" per ascoltare in loop solo quello che stai modificando.',
   'Vuoi riascoltare sempre la stessa parte del brano, con tutte le tracce? Premi "🔁 Ripeti parte": sui numeri delle battute compare una fascia colorata, trascinane i bordi per scegliere da dove a dove. Oppure seleziona un blocco e premi "🔁 Ripeti blocco".',
   'Quando ti piace, "Esporta WAV" crea il file audio della canzone.',
-  'Hai un dubbio o ti serve un\'idea? "💬 Assistente" risponde a domande sulla musica e sul tuo brano (serve LM Studio acceso con il server locale: vedi il README).',
+  'Hai un dubbio o ti serve un\'idea? "💬 Assistente" risponde a domande sulla musica e sul tuo brano; sotto la risposta trovi le fonti che ha consultato (serve LM Studio acceso con il server locale: vedi il README).',
 ]
 
 export const GLOSSARY: [string, string][] = [

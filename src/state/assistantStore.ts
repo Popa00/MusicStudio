@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import type { KnowledgeSource } from '../assistant/knowledge/schema'
 
 export interface AssistantMessage {
   id: string
@@ -6,6 +7,8 @@ export interface AssistantMessage {
   content: string
   /** Il messaggio è un errore da mostrare (es. LM Studio spento): non viene rimandato al modello. */
   error?: boolean
+  /** Le fonti delle schede della biblioteca consultate per questa risposta. */
+  sources?: KnowledgeSource[]
 }
 
 /** La chat con l'assistente: resta solo finché la pagina è aperta, non fa parte del brano. */
